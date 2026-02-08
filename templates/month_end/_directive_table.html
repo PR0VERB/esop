@@ -1,0 +1,58 @@
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 2px solid #333; text-align: left;">
+            <th style="padding: 0.5rem;">Beneficiary</th>
+            <th style="padding: 0.5rem;">Tax Year</th>
+            <th style="padding: 0.5rem;">Directive #</th>
+            <th style="padding: 0.5rem; text-align: right;">Taxable Amount</th>
+            <th style="padding: 0.5rem; text-align: right;">Rate</th>
+            <th style="padding: 0.5rem; text-align: right;">Calculated Tax</th>
+            <th style="padding: 0.5rem;">Request Date</th>
+            <th style="padding: 0.5rem;">Response Date</th>
+            <th style="padding: 0.5rem;">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for directive in tax_directives %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'beneficiaries:detail' company_pk=company.pk pk=directive.beneficiary.pk %}">
+                    {{ directive.beneficiary.full_name }}
+                </a>
+            </td>
+            <td style="padding: 0.5rem;">{{ directive.tax_year }}</td>
+            <td style="padding: 0.5rem;">{{ directive.directive_number|default:"—" }}</td>
+            <td style="padding: 0.5rem; text-align: right;">R{{ directive.taxable_amount|floatformat:2 }}</td>
+            <td style="padding: 0.5rem; text-align: right;">
+                {% if directive.directive_rate %}
+                    {{ directive.directive_rate|floatformat:2 }}%
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td style="padding: 0.5rem; text-align: right;">
+                {% if directive.calculated_tax %}
+                    R{{ directive.calculated_tax|floatformat:2 }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td style="padding: 0.5rem;">{{ directive.request_date|date:"Y-m-d"|default:"—" }}</td>
+            <td style="padding: 0.5rem;">{{ directive.response_date|date:"Y-m-d"|default:"—" }}</td>
+            <td style="padding: 0.5rem;">
+                <span class="badge badge-{{ directive.status }}">{{ directive.get_status_display }}</span>
+                {% if directive.decline_reason %}
+                <br><small style="color: #dc2626;">{{ directive.decline_reason }}</small>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="9" style="padding: 1rem; text-align: center; color: #666;">
+                No tax directives yet.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

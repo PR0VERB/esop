@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Change Status – {{ document.title }}{% endblock %}
+
+{% block content %}
+<h1>Change Document Status</h1>
+<p style="color: #666;">{{ document.title }} – {{ company.name }}</p>
+
+<div style="background: #f3f4f6; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;">
+    <dl>
+        <dt>Current Status</dt>
+        <dd><span class="badge badge-{{ document.status }}">{{ document.get_status_display }}</span></dd>
+        <dt>Original Filename</dt>
+        <dd>{{ document.original_filename }}</dd>
+        <dt>SHA-256 Hash</dt>
+        <dd style="font-family: monospace; font-size: 0.85rem;">{{ document.file_hash }}</dd>
+    </dl>
+</div>
+
+<form method="post" action="">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 1rem;">
+        <label for="{{ form.status.id_for_label }}"><strong>New Status</strong></label>
+        {{ form.status }}
+        {% if form.status.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ form.status.errors.0 }}</p>{% endif %}
+    </div>
+
+    <div style="background: #fef2f2; padding: 0.75rem; border-left: 3px solid #dc2626; font-size: 0.85rem; margin-bottom: 1rem;">
+        <strong>Warning:</strong> Changing a document to "Active" makes it available for download.
+        Ensure the file has been reviewed for malware and correctness.
+    </div>
+
+    <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="btn btn-primary">Update Status</button>
+        <a href="{% url 'documents:detail' company_pk=company.pk pk=document.pk %}" class="btn">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+

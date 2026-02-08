@@ -1,0 +1,63 @@
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 2px solid #333; text-align: left;">
+            <th style="padding: 0.5rem;">Title</th>
+            <th style="padding: 0.5rem;">Category</th>
+            <th style="padding: 0.5rem;">Status</th>
+            <th style="padding: 0.5rem;">Size</th>
+            <th style="padding: 0.5rem;">Uploaded</th>
+            <th style="padding: 0.5rem;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for doc in documents %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'documents:detail' company_pk=company.pk pk=doc.pk %}">
+                    {{ doc.title }}
+                </a>
+            </td>
+            <td style="padding: 0.5rem;">{{ doc.get_category_display }}</td>
+            <td style="padding: 0.5rem;">
+                <span class="badge badge-{{ doc.status }}">{{ doc.get_status_display }}</span>
+            </td>
+            <td style="padding: 0.5rem;">{{ doc.size_display }}</td>
+            <td style="padding: 0.5rem;">{{ doc.created_at|date:"d M Y H:i" }}</td>
+            <td style="padding: 0.5rem;">
+                {% if doc.is_accessible %}
+                <a href="{% url 'documents:download' company_pk=company.pk pk=doc.pk %}">Download</a>
+                {% else %}
+                <span style="color: #999;">{{ doc.get_status_display }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="padding: 1rem; text-align: center; color: #666;">
+                No documents found.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&category={{ request.GET.category }}&status={{ request.GET.status }}"
+       hx-get="{% url 'documents:list' company_pk=company.pk %}?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&category={{ request.GET.category }}&status={{ request.GET.status }}"
+       hx-target="#document-table">
+        ← Previous
+    </a>
+    {% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&category={{ request.GET.category }}&status={{ request.GET.status }}"
+       hx-get="{% url 'documents:list' company_pk=company.pk %}?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&category={{ request.GET.category }}&status={{ request.GET.status }}"
+       hx-target="#document-table">
+        Next →
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+

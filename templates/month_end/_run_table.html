@@ -1,0 +1,49 @@
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background: #f5f5f5;">
+            <th style="padding: 0.5rem; text-align: left;">Period</th>
+            <th style="padding: 0.5rem; text-align: left;">Title</th>
+            <th style="padding: 0.5rem; text-align: center;">Status</th>
+            <th style="padding: 0.5rem; text-align: right;">Events</th>
+            <th style="padding: 0.5rem; text-align: right;">Net Proceeds</th>
+            <th style="padding: 0.5rem; text-align: left;">Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for run in runs %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 0.5rem;">{{ run.period_display }}</td>
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'month_end:detail' company_pk=company.pk pk=run.pk %}">
+                    {{ run.title }}
+                </a>
+            </td>
+            <td style="padding: 0.5rem; text-align: center;">
+                <span class="badge badge-{{ run.status }}">{{ run.get_status_display }}</span>
+            </td>
+            <td style="padding: 0.5rem; text-align: right;">{{ run.vesting_event_count }}</td>
+            <td style="padding: 0.5rem; text-align: right;">R{{ run.total_net_proceeds|floatformat:2 }}</td>
+            <td style="padding: 0.5rem;">{{ run.created_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="padding: 1rem; text-align: center;">
+                No month-end runs found.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if page_obj %}
+<div style="margin-top: 1rem;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">← Previous</a>
+    {% endif %}
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next →</a>
+    {% endif %}
+</div>
+{% endif %}
+

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Login – ESOP Admin{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 3rem auto;">
+    <h1 style="margin-bottom: 1.5rem; text-align: center;">Sign In</h1>
+
+    <div id="login-form-container">
+        {% include "accounts/_login_form.html" %}
+    </div>
+</div>
+{% endblock %}
+

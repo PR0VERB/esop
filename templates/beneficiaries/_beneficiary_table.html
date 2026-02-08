@@ -1,0 +1,59 @@
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 2px solid #333; text-align: left;">
+            <th style="padding: 0.5rem;">Employee #</th>
+            <th style="padding: 0.5rem;">Name</th>
+            <th style="padding: 0.5rem;">Email</th>
+            <th style="padding: 0.5rem;">Status</th>
+            <th style="padding: 0.5rem;">Total Shares</th>
+            <th style="padding: 0.5rem;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in beneficiaries %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 0.5rem;">{{ b.employee_number|default:"—" }}</td>
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'beneficiaries:detail' company_pk=company.pk pk=b.pk %}">
+                    {{ b.full_name }}
+                </a>
+            </td>
+            <td style="padding: 0.5rem;">{{ b.email|default:"—" }}</td>
+            <td style="padding: 0.5rem;">
+                <span class="badge badge-{{ b.status }}">{{ b.get_status_display }}</span>
+            </td>
+            <td style="padding: 0.5rem;">{{ b.total_shares }}</td>
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'beneficiaries:update' company_pk=company.pk pk=b.pk %}">Edit</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" style="padding: 1rem; text-align: center; color: #666;">
+                No beneficiaries found.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-get="{% url 'beneficiaries:list' company_pk=company.pk %}?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-target="#beneficiary-table">
+        ← Previous
+    </a>
+    {% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-get="{% url 'beneficiaries:list' company_pk=company.pk %}?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-target="#beneficiary-table">
+        Next →
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ beneficiary.full_name }} – {{ company.name }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>{{ beneficiary.full_name }}</h1>
+    <div style="display: flex; gap: 0.5rem;">
+        <a href="{% url 'beneficiaries:update' company_pk=company.pk pk=beneficiary.pk %}" class="btn btn-primary">
+            Edit
+        </a>
+        <a href="{% url 'beneficiaries:list' company_pk=company.pk %}" class="btn">
+            ← Back to list
+        </a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <!-- Personal Information -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">Personal Information</h2>
+        <dl>
+            <dt>Employee Number</dt>
+            <dd>{{ beneficiary.employee_number|default:"—" }}</dd>
+            <dt>Name</dt>
+            <dd>{{ beneficiary.full_name }}</dd>
+            <dt>ID Number</dt>
+            <dd>{{ beneficiary.id_number|default:"Not recorded" }}</dd>
+            <dt>Date of Birth</dt>
+            <dd>{{ beneficiary.date_of_birth|date:"d M Y"|default:"—" }}</dd>
+            <dt>Email</dt>
+            <dd>{{ beneficiary.email|default:"—" }}</dd>
+            <dt>Phone</dt>
+            <dd>{{ beneficiary.phone|default:"—" }}</dd>
+            <dt>Tax Number</dt>
+            <dd>{{ beneficiary.tax_number|default:"—" }}</dd>
+            <dt>Status</dt>
+            <dd><span class="badge badge-{{ beneficiary.status }}">{{ beneficiary.get_status_display }}</span></dd>
+        </dl>
+    </div>
+
+    <!-- Bank & Share Details -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">Bank Details</h2>
+        <dl>
+            <dt>Bank</dt>
+            <dd>{{ beneficiary.bank_name|default:"—" }}</dd>
+            <dt>Account Number</dt>
+            <dd>{{ beneficiary.account_number|default:"Not recorded" }}</dd>
+            <dt>Account Type</dt>
+            <dd>{{ beneficiary.get_account_type_display|default:"—" }}</dd>
+            <dt>Branch Code</dt>
+            <dd>{{ beneficiary.branch_code|default:"—" }}</dd>
+        </dl>
+
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin-top: 1.5rem;">Share Allocation</h2>
+        <dl>
+            <dt>Total Shares</dt>
+            <dd>{{ beneficiary.total_shares }}</dd>
+            <dt>Vested Shares</dt>
+            <dd>{{ beneficiary.vested_shares }}</dd>
+            <dt>Unvested Shares</dt>
+            <dd>{{ beneficiary.unvested_shares }}</dd>
+        </dl>
+
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin-top: 1.5rem;">Dates</h2>
+        <dl>
+            <dt>Employment Date</dt>
+            <dd>{{ beneficiary.employment_date|date:"d M Y"|default:"—" }}</dd>
+            <dt>Scheme Join Date</dt>
+            <dd>{{ beneficiary.scheme_join_date|date:"d M Y"|default:"—" }}</dd>
+            <dt>Termination Date</dt>
+            <dd>{{ beneficiary.termination_date|date:"d M Y"|default:"—" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div style="margin-top: 1rem; color: #999; font-size: 0.85rem;">
+    Created: {{ beneficiary.created_at|date:"d M Y H:i" }} |
+    Updated: {{ beneficiary.updated_at|date:"d M Y H:i" }}
+</div>
+{% endblock %}
+

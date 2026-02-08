@@ -1,0 +1,49 @@
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 2px solid #333; text-align: left;">
+            <th style="padding: 0.5rem;">Beneficiary</th>
+            <th style="padding: 0.5rem;">Event Type</th>
+            <th style="padding: 0.5rem;">Date</th>
+            <th style="padding: 0.5rem; text-align: right;">Shares</th>
+            <th style="padding: 0.5rem; text-align: right;">Before</th>
+            <th style="padding: 0.5rem; text-align: right;">After</th>
+            <th style="padding: 0.5rem; text-align: right;">Price</th>
+            <th style="padding: 0.5rem; text-align: right;">Gross</th>
+            <th style="padding: 0.5rem; text-align: right;">Tax</th>
+            <th style="padding: 0.5rem; text-align: right;">Net</th>
+            <th style="padding: 0.5rem;">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in vesting_events %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'beneficiaries:detail' company_pk=company.pk pk=event.beneficiary.pk %}">
+                    {{ event.beneficiary.full_name }}
+                </a>
+            </td>
+            <td style="padding: 0.5rem;">
+                <span class="badge badge-{{ event.event_type }}">{{ event.get_event_type_display }}</span>
+            </td>
+            <td style="padding: 0.5rem;">{{ event.event_date|date:"Y-m-d" }}</td>
+            <td style="padding: 0.5rem; text-align: right;">{{ event.shares_affected }}</td>
+            <td style="padding: 0.5rem; text-align: right;">{{ event.shares_before }}</td>
+            <td style="padding: 0.5rem; text-align: right;">{{ event.shares_after }}</td>
+            <td style="padding: 0.5rem; text-align: right;">R{{ event.share_price|floatformat:4 }}</td>
+            <td style="padding: 0.5rem; text-align: right;">R{{ event.gross_amount|floatformat:2 }}</td>
+            <td style="padding: 0.5rem; text-align: right;">R{{ event.tax_amount|floatformat:2 }}</td>
+            <td style="padding: 0.5rem; text-align: right;">R{{ event.net_amount|floatformat:2 }}</td>
+            <td style="padding: 0.5rem;">
+                <span class="badge badge-{{ event.status }}">{{ event.get_status_display }}</span>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="11" style="padding: 1rem; text-align: center; color: #666;">
+                No vesting events yet.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

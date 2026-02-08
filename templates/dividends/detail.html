@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ run.title }} – {{ company.name }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>{{ run.title }}</h1>
+    <div style="display: flex; gap: 0.5rem;">
+        {% if run.is_editable %}
+        <a href="{% url 'dividends:update' company_pk=company.pk pk=run.pk %}" class="btn btn-primary">Edit</a>
+        {% endif %}
+        <a href="{% url 'dividends:list' company_pk=company.pk %}" class="btn">← Back to list</a>
+    </div>
+</div>
+
+<!-- Status badge -->
+<p>
+    Status: <span class="badge badge-{{ run.status }}" style="font-size: 1rem; padding: 0.25rem 0.75rem;">{{ run.get_status_display }}</span>
+    {% if run.failure_reason %}
+    <br><span style="color: #dc2626; font-size: 0.9rem;">Failure: {{ run.failure_reason }}</span>
+    {% endif %}
+</p>
+
+<!-- Action buttons -->
+<div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+    {% if run.can_approve %}
+    <form method="post" action="{% url 'dividends:approve' company_pk=company.pk pk=run.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary"
+                onclick="return confirm('Approve this dividend run?')">
+            ✓ Approve
+        </button>
+    </form>
+    {% endif %}
+
+    {% if run.can_process %}
+    <form method="post" action="{% url 'dividends:process' company_pk=company.pk pk=run.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary"
+                onclick="return confirm('Process this dividend run? This will create allocations for all eligible beneficiaries.')">
+            ▶ Process
+        </button>
+    </form>
+    {% endif %}
+
+    {% if run.status == "failed" or run.status == "approved" %}
+    <form method="post" action="{% url 'dividends:reset' company_pk=company.pk pk=run.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn"
+                onclick="return confirm('Reset this run to draft? Any existing allocations will be deleted.')">
+            ↺ Reset to Draft
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <!-- Run Details -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">Run Details</h2>
+        <dl>
+            <dt>Description</dt>
+            <dd>{{ run.description|default:"—" }}</dd>
+            <dt>Total Amount (Pool)</dt>
+            <dd>R{{ run.total_amount }}</dd>
+            <dt>Dividend Per Share</dt>
+            <dd>R{{ run.dividend_per_share }}</dd>
+            <dt>DWT Rate</dt>
+            <dd>{{ run.dwt_rate|floatformat:2 }}%</dd>
+            <dt>Record Date</dt>
+            <dd>{{ run.record_date|date:"d M Y" }}</dd>
+            <dt>Payment Date</dt>
+            <dd>{{ run.payment_date|date:"d M Y" }}</dd>
+            <dt>Declaration Date</dt>
+            <dd>{{ run.declaration_date|date:"d M Y"|default:"—" }}</dd>
+        </dl>
+    </div>
+
+    <!-- Computed Totals & Tracking -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">Totals</h2>
+        <dl>
+            <dt>Total Gross</dt>
+            <dd>R{{ run.total_gross }}</dd>
+            <dt>Total Tax (DWT)</dt>
+            <dd>R{{ run.total_tax }}</dd>
+            <dt>Total Net</dt>
+            <dd>R{{ run.total_net }}</dd>
+            <dt>Allocations</dt>
+            <dd>{{ run.allocation_count }}</dd>
+        </dl>
+
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin-top: 1.5rem;">Tracking</h2>
+        <dl>
+            <dt>Created By</dt>
+            <dd>{{ run.created_by }}</dd>
+            <dt>Approved By</dt>
+            <dd>{{ run.approved_by|default:"—" }}</dd>
+            <dt>Approved At</dt>
+            <dd>{{ run.approved_at|date:"d M Y H:i"|default:"—" }}</dd>
+            <dt>Completed At</dt>
+            <dd>{{ run.completed_at|date:"d M Y H:i"|default:"—" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<!-- Allocations table -->
+{% if allocations %}
+<h2 style="margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">
+    Allocations ({{ allocations|length }})
+</h2>
+{% include "dividends/_allocation_table.html" %}
+{% endif %}
+
+<div style="margin-top: 1rem; color: #999; font-size: 0.85rem;">
+    Created: {{ run.created_at|date:"d M Y H:i" }} |
+    Updated: {{ run.updated_at|date:"d M Y H:i" }} |
+    Key: {{ run.idempotency_key }}
+</div>
+{% endblock %}
+

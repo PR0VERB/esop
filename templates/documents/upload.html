@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Upload Document – {{ company.name }}{% endblock %}
+
+{% block content %}
+<h1>Upload Document</h1>
+<p style="color: #666;">{{ company.name }}</p>
+
+<form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-error" style="background: #fef2f2; padding: 0.75rem; border-left: 3px solid #dc2626; margin-bottom: 1rem;">
+            {% for error in form.non_field_errors %}
+                <p style="margin: 0;">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Document Details</strong></legend>
+
+        {% for field in form %}
+            {% if field.name != "file" %}
+            <div style="margin-bottom: 0.75rem;">
+                <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                {{ field }}
+                {% if field.help_text %}<small style="color: #666;">{{ field.help_text }}</small>{% endif %}
+                {% if field.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>File Upload</strong></legend>
+
+        <div style="margin-bottom: 0.75rem;">
+            <label for="{{ form.file.id_for_label }}">{{ form.file.label }} *</label>
+            {{ form.file }}
+            {% if form.file.help_text %}<small style="color: #666;">{{ form.file.help_text }}</small>{% endif %}
+            {% if form.file.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ form.file.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div style="background: #fffbeb; padding: 0.75rem; border-left: 3px solid #f59e0b; font-size: 0.85rem;">
+            <strong>Security note:</strong> Uploaded files are placed in quarantine and must be
+            approved by an administrator before they become available for download.
+        </div>
+    </fieldset>
+
+    <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="btn btn-primary">Upload Document</button>
+        <a href="{% url 'documents:list' company_pk=company.pk %}" class="btn">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Beneficiaries – {{ company.name }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>Beneficiaries – {{ company.name }}</h1>
+    <a href="{% url 'beneficiaries:create' company_pk=company.pk %}" class="btn btn-primary">
+        + Add Beneficiary
+    </a>
+</div>
+
+<!-- Search / filter bar -->
+<form method="get" action="{% url 'beneficiaries:list' company_pk=company.pk %}"
+      style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+    <input type="text" name="q" value="{{ request.GET.q }}"
+           placeholder="Search name, employee #, email…"
+           style="flex: 1; padding: 0.5rem;">
+    <select name="status" style="padding: 0.5rem;">
+        <option value="">All statuses</option>
+        <option value="active" {% if request.GET.status == "active" %}selected{% endif %}>Active</option>
+        <option value="inactive" {% if request.GET.status == "inactive" %}selected{% endif %}>Inactive</option>
+        <option value="suspended" {% if request.GET.status == "suspended" %}selected{% endif %}>Suspended</option>
+        <option value="terminated" {% if request.GET.status == "terminated" %}selected{% endif %}>Terminated</option>
+    </select>
+    <button type="submit" class="btn">Search</button>
+</form>
+
+<div id="beneficiary-table">
+    {% include "beneficiaries/_beneficiary_table.html" %}
+</div>
+{% endblock %}
+

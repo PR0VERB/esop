@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Dividend Runs – {{ company.name }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>Dividend Runs – {{ company.name }}</h1>
+    <a href="{% url 'dividends:create' company_pk=company.pk %}" class="btn btn-primary">
+        + New Dividend Run
+    </a>
+</div>
+
+<!-- Search / filter bar -->
+<form method="get" action="{% url 'dividends:list' company_pk=company.pk %}"
+      style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+    <input type="text" name="q" value="{{ request.GET.q }}"
+           placeholder="Search title or idempotency key…"
+           style="flex: 1; padding: 0.5rem;">
+    <select name="status" style="padding: 0.5rem;">
+        <option value="">All statuses</option>
+        <option value="draft" {% if request.GET.status == "draft" %}selected{% endif %}>Draft</option>
+        <option value="approved" {% if request.GET.status == "approved" %}selected{% endif %}>Approved</option>
+        <option value="processing" {% if request.GET.status == "processing" %}selected{% endif %}>Processing</option>
+        <option value="completed" {% if request.GET.status == "completed" %}selected{% endif %}>Completed</option>
+        <option value="failed" {% if request.GET.status == "failed" %}selected{% endif %}>Failed</option>
+    </select>
+    <button type="submit" class="btn">Search</button>
+</form>
+
+<div id="run-table">
+    {% include "dividends/_run_table.html" %}
+</div>
+{% endblock %}
+

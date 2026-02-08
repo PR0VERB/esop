@@ -1,0 +1,65 @@
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 2px solid #333; text-align: left;">
+            <th style="padding: 0.5rem;">Title</th>
+            <th style="padding: 0.5rem;">Status</th>
+            <th style="padding: 0.5rem;">Record Date</th>
+            <th style="padding: 0.5rem;">Payment Date</th>
+            <th style="padding: 0.5rem;">Per Share</th>
+            <th style="padding: 0.5rem;">Total Amount</th>
+            <th style="padding: 0.5rem;">Allocations</th>
+            <th style="padding: 0.5rem;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for run in runs %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'dividends:detail' company_pk=company.pk pk=run.pk %}">
+                    {{ run.title }}
+                </a>
+            </td>
+            <td style="padding: 0.5rem;">
+                <span class="badge badge-{{ run.status }}">{{ run.get_status_display }}</span>
+            </td>
+            <td style="padding: 0.5rem;">{{ run.record_date|date:"d M Y" }}</td>
+            <td style="padding: 0.5rem;">{{ run.payment_date|date:"d M Y" }}</td>
+            <td style="padding: 0.5rem;">R{{ run.dividend_per_share }}</td>
+            <td style="padding: 0.5rem;">R{{ run.total_amount }}</td>
+            <td style="padding: 0.5rem;">{{ run.allocation_count }}</td>
+            <td style="padding: 0.5rem;">
+                {% if run.is_editable %}
+                    <a href="{% url 'dividends:update' company_pk=company.pk pk=run.pk %}">Edit</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" style="padding: 1rem; text-align: center; color: #666;">
+                No dividend runs found.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-get="{% url 'dividends:list' company_pk=company.pk %}?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-target="#run-table">
+        ← Previous
+    </a>
+    {% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-get="{% url 'dividends:list' company_pk=company.pk %}?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&status={{ request.GET.status }}"
+       hx-target="#run-table">
+        Next →
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+

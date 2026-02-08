@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Beneficiary – {{ company.name }}{% endblock %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}Edit {{ form.instance.full_name }}{% else %}Add Beneficiary{% endif %}</h1>
+<p style="color: #666;">{{ company.name }}</p>
+
+<form method="post" action="">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-error" style="background: #fef2f2; padding: 0.75rem; border-left: 3px solid #dc2626; margin-bottom: 1rem;">
+            {% for error in form.non_field_errors %}
+                <p style="margin: 0;">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Personal Information</strong></legend>
+
+        {% for field in form %}
+            {% if field.name in "employee_number,first_name,last_name,id_number,date_of_birth,email,phone,tax_number" %}
+            <div style="margin-bottom: 0.75rem;">
+                <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                {{ field }}
+                {% if field.help_text %}<small style="color: #666;">{{ field.help_text }}</small>{% endif %}
+                {% if field.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Bank Details</strong></legend>
+
+        {% for field in form %}
+            {% if field.name in "bank_name,account_number,account_type,branch_code" %}
+            <div style="margin-bottom: 0.75rem;">
+                <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                {{ field }}
+                {% if field.help_text %}<small style="color: #666;">{{ field.help_text }}</small>{% endif %}
+                {% if field.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Share Allocation</strong></legend>
+
+        {% for field in form %}
+            {% if field.name in "total_shares,vested_shares,unvested_shares" %}
+            <div style="margin-bottom: 0.75rem;">
+                <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                {{ field }}
+                {% if field.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Status & Dates</strong></legend>
+
+        {% for field in form %}
+            {% if field.name in "status,employment_date,scheme_join_date,termination_date" %}
+            <div style="margin-bottom: 0.75rem;">
+                <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %} *{% endif %}</label>
+                {{ field }}
+                {% if field.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+
+    <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}Update{% else %}Create{% endif %} Beneficiary
+        </button>
+        <a href="{% url 'beneficiaries:list' company_pk=company.pk %}" class="btn">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+

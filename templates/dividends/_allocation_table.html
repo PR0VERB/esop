@@ -1,0 +1,41 @@
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="border-bottom: 2px solid #333; text-align: left;">
+            <th style="padding: 0.5rem;">Beneficiary</th>
+            <th style="padding: 0.5rem;">Employee #</th>
+            <th style="padding: 0.5rem;">Shares</th>
+            <th style="padding: 0.5rem;">Gross</th>
+            <th style="padding: 0.5rem;">Tax (DWT)</th>
+            <th style="padding: 0.5rem;">Net</th>
+            <th style="padding: 0.5rem;">Status</th>
+            <th style="padding: 0.5rem;">Payment Ref</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for alloc in allocations %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'beneficiaries:detail' company_pk=company.pk pk=alloc.beneficiary.pk %}">
+                    {{ alloc.beneficiary.full_name }}
+                </a>
+            </td>
+            <td style="padding: 0.5rem;">{{ alloc.beneficiary.employee_number|default:"—" }}</td>
+            <td style="padding: 0.5rem;">{{ alloc.shares_at_record_date }}</td>
+            <td style="padding: 0.5rem;">R{{ alloc.gross_amount }}</td>
+            <td style="padding: 0.5rem;">R{{ alloc.tax_amount }}</td>
+            <td style="padding: 0.5rem;">R{{ alloc.net_amount }}</td>
+            <td style="padding: 0.5rem;">
+                <span class="badge badge-{{ alloc.status }}">{{ alloc.get_status_display }}</span>
+            </td>
+            <td style="padding: 0.5rem;">{{ alloc.payment_reference|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" style="padding: 1rem; text-align: center; color: #666;">
+                No allocations yet.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

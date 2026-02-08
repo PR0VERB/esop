@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}New{% endif %} Month-End Run – {{ company.name }}{% endblock %}
+
+{% block content %}
+<h1>{% if form.instance.pk %}Edit {{ form.instance.title }}{% else %}New Month-End Run{% endif %}</h1>
+<p style="color: #666;">{{ company.name }}</p>
+
+<form method="post" action="">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-error" style="background: #fef2f2; padding: 0.75rem; border-left: 3px solid #dc2626; margin-bottom: 1rem;">
+            {% for error in form.non_field_errors %}
+                <p style="margin: 0;">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Period</strong></legend>
+
+        <div style="display: flex; gap: 1rem;">
+            <div style="margin-bottom: 0.75rem;">
+                <label for="{{ form.period_year.id_for_label }}">Year *</label>
+                {{ form.period_year }}
+                {% if form.period_year.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ form.period_year.errors.0 }}</p>{% endif %}
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label for="{{ form.period_month.id_for_label }}">Month *</label>
+                {{ form.period_month }}
+                {% if form.period_month.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ form.period_month.errors.0 }}</p>{% endif %}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset style="margin-bottom: 1.5rem; border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Run Details</strong></legend>
+
+        <div style="margin-bottom: 0.75rem;">
+            <label for="{{ form.title.id_for_label }}">Title</label>
+            {{ form.title }}
+            <small style="color: #666;">Leave blank to auto-generate from period.</small>
+            {% if form.title.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ form.title.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div style="margin-bottom: 0.75rem;">
+            <label for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}<p style="color: #dc2626; font-size: 0.85rem;">{{ form.description.errors.0 }}</p>{% endif %}
+        </div>
+    </fieldset>
+
+    <!-- Hidden idempotency key -->
+    {{ form.idempotency_key }}
+
+    <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}Update{% else %}Create{% endif %} Month-End Run
+        </button>
+        <a href="{% url 'month_end:list' company_pk=company.pk %}" class="btn">Cancel</a>
+    </div>
+</form>
+{% endblock %}
+

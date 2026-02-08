@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ document.title }} – {{ company.name }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>{{ document.title }}</h1>
+    <div style="display: flex; gap: 0.5rem;">
+        {% if document.is_accessible %}
+        <a href="{% url 'documents:download' company_pk=company.pk pk=document.pk %}" class="btn btn-primary">
+            ⬇ Download
+        </a>
+        {% endif %}
+        <a href="{% url 'documents:status-update' company_pk=company.pk pk=document.pk %}" class="btn">
+            Change Status
+        </a>
+        <a href="{% url 'documents:list' company_pk=company.pk %}" class="btn">
+            ← Back to list
+        </a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <!-- Document Information -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">Document Information</h2>
+        <dl>
+            <dt>Title</dt>
+            <dd>{{ document.title }}</dd>
+            <dt>Description</dt>
+            <dd>{{ document.description|default:"—" }}</dd>
+            <dt>Category</dt>
+            <dd>{{ document.get_category_display }}</dd>
+            <dt>Status</dt>
+            <dd><span class="badge badge-{{ document.status }}">{{ document.get_status_display }}</span></dd>
+            {% if document.beneficiary %}
+            <dt>Beneficiary</dt>
+            <dd>
+                <a href="{% url 'beneficiaries:detail' company_pk=company.pk pk=document.beneficiary.pk %}">
+                    {{ document.beneficiary.full_name }}
+                </a>
+            </dd>
+            {% endif %}
+        </dl>
+    </div>
+
+    <!-- File Details -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">File Details</h2>
+        <dl>
+            <dt>Original Filename</dt>
+            <dd>{{ document.original_filename }}</dd>
+            <dt>Content Type</dt>
+            <dd>{{ document.content_type }}</dd>
+            <dt>File Size</dt>
+            <dd>{{ document.size_display }}</dd>
+            <dt>SHA-256 Hash</dt>
+            <dd style="font-family: monospace; font-size: 0.85rem; word-break: break-all;">{{ document.file_hash|default:"—" }}</dd>
+            <dt>Uploaded By</dt>
+            <dd>{{ document.uploaded_by|default:"System" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div style="margin-top: 1rem; color: #999; font-size: 0.85rem;">
+    Created: {{ document.created_at|date:"d M Y H:i" }} |
+    Updated: {{ document.updated_at|date:"d M Y H:i" }}
+</div>
+{% endblock %}
+

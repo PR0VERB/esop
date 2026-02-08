@@ -1,0 +1,33 @@
+<!-- Login form -->
+<form method="post" action="{% url 'accounts:login' %}">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+    {% endif %}
+
+    <label for="id_username">Username</label>
+    {{ form.username }}
+    {% if form.username.errors %}
+        <p style="color: #9b1c1c; font-size: 0.85rem;">{{ form.username.errors.0 }}</p>
+    {% endif %}
+
+    <label for="id_password">Password</label>
+    {{ form.password }}
+    {% if form.password.errors %}
+        <p style="color: #9b1c1c; font-size: 0.85rem;">{{ form.password.errors.0 }}</p>
+    {% endif %}
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;">
+        Sign In
+    </button>
+</form>
+

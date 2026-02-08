@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}{{ run.title }} – {{ company.name }}{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>{{ run.title }}</h1>
+    <div style="display: flex; gap: 0.5rem;">
+        {% if run.is_editable %}
+        <a href="{% url 'month_end:update' company_pk=company.pk pk=run.pk %}" class="btn btn-primary">Edit</a>
+        {% endif %}
+        <a href="{% url 'month_end:list' company_pk=company.pk %}" class="btn">← Back to list</a>
+    </div>
+</div>
+
+<!-- Status badge -->
+<p>
+    Status: <span class="badge badge-{{ run.status }}" style="font-size: 1rem; padding: 0.25rem 0.75rem;">{{ run.get_status_display }}</span>
+    {% if run.failure_reason %}
+    <br><span style="color: #dc2626; font-size: 0.9rem;">Failure: {{ run.failure_reason }}</span>
+    {% endif %}
+</p>
+
+<!-- Action buttons -->
+<div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+    {% if run.can_approve %}
+    <form method="post" action="{% url 'month_end:approve' company_pk=company.pk pk=run.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary"
+                onclick="return confirm('Approve this month-end run?')">
+            ✓ Approve
+        </button>
+    </form>
+    {% endif %}
+
+    {% if run.can_process %}
+    <form method="post" action="{% url 'month_end:process' company_pk=company.pk pk=run.pk %}">
+        {% csrf_token %}
+        <fieldset style="border: 1px solid #ddd; padding: 0.5rem; margin: 0;">
+            <legend style="font-size: 0.9rem;">Process Run</legend>
+            <label for="share_price">Share Price (R):</label>
+            <input type="number" step="0.0001" name="share_price" id="share_price" value="{{ process_form.share_price.value }}" required style="width: 100px;">
+            <label for="tax_rate">Tax Rate:</label>
+            <input type="number" step="0.0001" name="tax_rate" id="tax_rate" value="0.3500" required style="width: 80px;">
+            <button type="submit" class="btn btn-primary"
+                    onclick="return confirm('Process this month-end run? This will create vesting events for all eligible beneficiaries.')">
+                ▶ Process
+            </button>
+        </fieldset>
+    </form>
+    {% endif %}
+
+    {% if run.status == "failed" or run.status == "approved" %}
+    <form method="post" action="{% url 'month_end:reset' company_pk=company.pk pk=run.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn"
+                onclick="return confirm('Reset this run to draft? Any existing vesting events will be deleted.')">
+            ↺ Reset to Draft
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <!-- Run Details -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">Run Details</h2>
+        <dl>
+            <dt>Period</dt>
+            <dd>{{ run.period_display }}</dd>
+            <dt>Description</dt>
+            <dd>{{ run.description|default:"—" }}</dd>
+        </dl>
+    </div>
+
+    <!-- Computed Totals & Tracking -->
+    <div>
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">Totals</h2>
+        <dl>
+            <dt>Total Shares Vested</dt>
+            <dd>{{ run.total_shares_vested|default:0 }}</dd>
+            <dt>Total Shares Sold</dt>
+            <dd>{{ run.total_shares_sold|default:0 }}</dd>
+            <dt>Total Gross Proceeds</dt>
+            <dd>R{{ run.total_gross_proceeds }}</dd>
+            <dt>Total Tax</dt>
+            <dd>R{{ run.total_tax }}</dd>
+            <dt>Total Net Proceeds</dt>
+            <dd>R{{ run.total_net_proceeds }}</dd>
+            <dt>Vesting Events</dt>
+            <dd>{{ run.vesting_event_count }}</dd>
+            <dt>Terminations</dt>
+            <dd>{{ run.termination_count }}</dd>
+        </dl>
+
+        <h2 style="border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin-top: 1.5rem;">Tracking</h2>
+        <dl>
+            <dt>Created By</dt>
+            <dd>{{ run.created_by }}</dd>
+            <dt>Approved By</dt>
+            <dd>{{ run.approved_by|default:"—" }}</dd>
+            <dt>Approved At</dt>
+            <dd>{{ run.approved_at|date:"d M Y H:i"|default:"—" }}</dd>
+            <dt>Completed At</dt>
+            <dd>{{ run.completed_at|date:"d M Y H:i"|default:"—" }}</dd>
+        </dl>
+    </div>
+</div>
+
+<!-- Vesting Events table -->
+{% if vesting_events %}
+<h2 style="margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">
+    Vesting Events ({{ vesting_events|length }})
+</h2>
+{% include "month_end/_event_table.html" %}
+{% endif %}
+
+<!-- Tax Directives table -->
+{% if tax_directives %}
+<h2 style="margin-top: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem;">
+    Tax Directives ({{ tax_directives|length }})
+</h2>
+{% include "month_end/_directive_table.html" %}
+{% endif %}
+
+<div style="margin-top: 1rem; color: #999; font-size: 0.85rem;">
+    Created: {{ run.created_at|date:"d M Y H:i" }} |
+    Updated: {{ run.updated_at|date:"d M Y H:i" }} |
+    Key: {{ run.idempotency_key }}
+</div>
+{% endblock %}
+
