@@ -41,6 +41,9 @@ class AuditAction(models.TextChoices):
     # Manual overrides
     MANUAL_OVERRIDE = "manual_override", "Manual Override"
 
+    # Company management
+    COMPANY_CREATE = "company_create", "Company Created"
+
     # Integration
     INTEGRATION_CALL = "integration_call", "Integration Call"
     INTEGRATION_RESPONSE = "integration_response", "Integration Response"

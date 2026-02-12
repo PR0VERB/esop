@@ -11,6 +11,7 @@ Security notes:
 from rest_framework import serializers
 
 from apps.beneficiaries.models import Beneficiary, BeneficiaryStatus, LeaverType
+from apps.integrations.models import JSECompany
 from apps.dividends.models import DividendRun, DividendAllocation, RunStatus, AllocationStatus
 from apps.month_end.models import (
     MonthEndRun, MonthEndRunStatus,
@@ -283,4 +284,24 @@ class MonthEndRunCreateSerializer(serializers.ModelSerializer):
             "title", "description", "period_year", "period_month",
             "idempotency_key",
         ]
+
+
+# -----------------------------------------------------------------------------
+# JSE Company Serializers
+# -----------------------------------------------------------------------------
+
+class JSECompanySearchSerializer(serializers.ModelSerializer):
+    """Read-only serializer for JSE company search results."""
+
+    yahoo_ticker = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = JSECompany
+        fields = [
+            "id", "ticker", "company_name", "isin", "sector",
+            "market_cap_category", "registration_number",
+            "share_price", "market_cap", "last_enriched_at",
+            "yahoo_ticker",
+        ]
+        read_only_fields = fields
 

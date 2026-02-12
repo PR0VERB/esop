@@ -1,5 +1,5 @@
 """
-Beneficiary model – tenant-scoped, with encrypted PII fields.
+Beneficiary model tenant-scoped, with encrypted PII fields.
 
 Security notes:
 - id_number and account_number are stored encrypted at rest (Fernet).

@@ -13,7 +13,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from uuid import UUID
 
-from django.db import transaction
+from django.db import models, transaction
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -46,6 +46,7 @@ def _make_json_safe(data: dict) -> dict:
 from apps.audit.models import AuditAction
 from apps.audit.services import log_audit
 from apps.beneficiaries.models import Beneficiary
+from apps.integrations.models import JSECompany
 from apps.dividends.models import DividendRun, DividendAllocation
 from apps.dividends import services as dividend_services
 from apps.dividends.services import InvalidStateTransition as DividendInvalidStateTransition
@@ -61,6 +62,7 @@ from .serializers import (
     DividendAllocationSerializer,
     MonthEndRunListSerializer, MonthEndRunDetailSerializer, MonthEndRunCreateSerializer,
     VestingEventSerializer, TaxDirectiveSerializer,
+    JSECompanySearchSerializer,
 )
 
 logger = logging.getLogger(__name__)
@@ -366,4 +368,52 @@ class TaxDirectiveViewSet(TenantScopedViewSetMixin, viewsets.ReadOnlyModelViewSe
             qs = qs.filter(run_id=run_id)
 
         return qs
+
+
+# -----------------------------------------------------------------------------
+# JSE Company Search ViewSet
+# -----------------------------------------------------------------------------
+
+class JSECompanySearchViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Search JSE-listed companies for autocomplete during company creation.
+
+    GET /api/v1/jse-companies/?q=sasol
+    GET /api/v1/jse-companies/{id}/
+
+    Scheme admins only. Not tenant-scoped (this is reference data).
+    """
+
+    queryset = JSECompany.objects.filter(is_active=True)
+    serializer_class = JSECompanySearchSerializer
+    permission_classes = [IsSchemeAdmin]
+    pagination_class = None
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        q = self.request.query_params.get("q", "").strip()
+        if q:
+            qs = qs.filter(
+                models.Q(company_name__icontains=q)
+                | models.Q(ticker__icontains=q)
+                | models.Q(isin__icontains=q)
+            )
+        else:
+            qs = qs.none()
+        return qs[:20]
+
+    @action(detail=True, methods=["post"])
+    def enrich(self, request, pk=None):
+        """Trigger live data enrichment for a JSE company."""
+        jse_company = self.get_object()
+        from apps.integrations.tasks import enrich_jse_company_async
+
+        enrich_jse_company_async.delay(
+            jse_company_id=jse_company.pk,
+            user_id=str(request.user.pk),
+        )
+        return Response({
+            "status": "queued",
+            "message": f"Enrichment queued for {jse_company.ticker}",
+        })
 

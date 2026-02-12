@@ -240,3 +240,74 @@ def poll_payment_status_async(
             self.retry(exc=e)
         except self.MaxRetriesExceededError:
             return {"status": "error", "message": str(e)}
+
+
+@shared_task(
+    bind=True,
+    name="integrations.enrich_jse_company",
+    max_retries=2,
+    default_retry_delay=60,
+    acks_late=True,
+)
+def enrich_jse_company_async(
+    self,
+    jse_company_id: int,
+    company_id: str = "",
+    user_id: str = "",
+) -> dict:
+    """
+    Enrich a JSECompany record with live Yahoo Finance data.
+
+    Args:
+        jse_company_id: PK of the JSECompany to enrich.
+        company_id: UUID of the Company context (for logging).
+        user_id: UUID of the user initiating the enrichment.
+
+    Returns:
+        dict with enrichment results.
+    """
+    from apps.accounts.models import User
+    from apps.integrations.jse import JSEClient
+    from apps.integrations.models import JSECompany
+    from apps.tenants.models import Company
+
+    logger.info("Enriching JSE company: %s", jse_company_id)
+
+    try:
+        jse_company = JSECompany.objects.get(pk=jse_company_id)
+    except JSECompany.DoesNotExist:
+        return {"status": "error", "message": f"JSECompany {jse_company_id} not found"}
+
+    company = None
+    user = None
+    if company_id:
+        company = Company.objects.filter(pk=company_id).first()
+    if user_id:
+        user = User.objects.filter(pk=user_id).first()
+
+    if company:
+        client = JSEClient(company=company, user=user)
+        return client.enrich_jse_company(jse_company, force=True)
+
+    # Standalone enrichment without integration logging
+    try:
+        import yfinance as yf
+        from decimal import Decimal
+        from django.utils import timezone
+
+        ticker = yf.Ticker(jse_company.yahoo_ticker)
+        info = ticker.info
+        share_price = info.get("currentPrice") or info.get("regularMarketPrice")
+        jse_company.share_price = Decimal(str(share_price)) if share_price else None
+        jse_company.market_cap = info.get("marketCap")
+        jse_company.last_enriched_at = timezone.now()
+        if info.get("sector") and not jse_company.sector:
+            jse_company.sector = info["sector"]
+        jse_company.save()
+        return {"status": "success", "share_price": str(jse_company.share_price)}
+    except Exception as e:
+        logger.exception("JSE enrichment failed: %s", e)
+        try:
+            self.retry(exc=e)
+        except self.MaxRetriesExceededError:
+            return {"status": "error", "message": str(e)}

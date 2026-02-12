@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude ESOP Django Walkthrough</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        h3 {
+            color: #2980b9;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            color: #16a085;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        code {
+            background: #ecf0f1;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: "Courier New", monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-btn:hover {
+            background: #2980b9;
+        }
+
+        .copy-btn.copied {
+            background: #27ae60;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .progress-tracker {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: #ecf0f1;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #ecf0f1;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #bdc3c7;
+        }
+
+        .tab-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 0 5px 5px 5px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .collapsible {
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .collapsible:hover {
+            background: #2980b9;
+        }
+
+        .collapsible.active {
+            background: #2ecc71;
+        }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #f8f9fa;
+            padding: 0 15px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .collapsible-content.show {
+            max-height: 5000px;
+            padding: 15px;
+        }
+
+        .exercise {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .exercise h4 {
+            color: #856404;
+        }
+
+        .answer {
+            background: #d4edda;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .answer.show {
+            display: block;
+        }
+
+        .show-answer-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .show-answer-btn:hover {
+            background: #218838;
+        }
+
+        .risk {
+            background: #f8d7da;
+            padding: 15px;
+            border-left: 4px solid #dc3545;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .risk h4 {
+            color: #721c24;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .glossary-term {
+            color: #3498db;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .glossary-term:hover {
+            color: #2980b9;
+        }
+
+        .state-diagram {
+            background: white;
+            padding: 20px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .state {
+            display: inline-block;
+            padding: 15px 25px;
+            border: 2px solid #2c3e50;
+            border-radius: 8px;
+            margin: 10px;
+            background: #ecf0f1;
+            font-weight: bold;
+        }
+
+        .state.draft {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .state.pending {
+            background: #f39c12;
+            color: white;
+        }
+
+        .state.approved {
+            background: #3498db;
+            color: white;
+        }
+
+        .state.processing {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .state.completed {
+            background: #27ae60;
+            color: white;
+        }
+
+        .state.failed {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 1.5em;
+            color: #2c3e50;
+        }
+
+        .simulator {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .simulator-row {
+            margin-bottom: 15px;
+        }
+
+        .simulator-row label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .simulator-row select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .simulate-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .simulate-btn:hover {
+            background: #2980b9;
+        }
+
+        .simulator-output {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+            white-space: pre-wrap;
+            font-family: "Courier New", monospace;
+            font-size: 0.9em;
+        }
+
+        .simulator-output.show {
+            display: block;
+        }
+
+        .quiz-question {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .checkpoint-btn {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+
+        .checkpoint-btn:hover {
+            background: #8e44ad;
+        }
+
+        .checkpoint-btn.completed {
+            background: #27ae60;
+        }
+
+        .note {
+            background: #d1ecf1;
+            padding: 12px;
+            border-left: 4px solid #17a2b8;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            padding: 12px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .danger {
+            background: #f8d7da;
+            padding: 12px;
+            border-left: 4px solid #dc3545;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .flow-diagram {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .flow-step {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-left: 3px solid #3498db;
+            border-radius: 3px;
+        }
+
+        .flow-step strong {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Claude ESOP Django Walkthrough</h1>
+            <p>Learn Django by reading and reasoning about a real security-heavy codebase.</p>
+            <p>This guide teaches you how to trace requests and predict behavior before running code.</p>
+        </div>
+
+        <div class="progress-tracker">
+            <strong>Your Progress</strong>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.9em;">Mark sections complete as you learn. Your progress saves automatically.</p>
+        </div>
+
+        <input type="text" class="search-box" id="searchBox" placeholder="Search this guide (type to filter content)...">
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="main">Main Guide</button>
+            <button class="tab-btn" data-tab="simulator">Flow Simulator</button>
+            <button class="tab-btn" data-tab="glossary">Glossary</button>
+            <button class="tab-btn" data-tab="quiz">Final Quiz</button>
+        </div>
+
+        <div class="tab-content active" id="main">
+            <div class="searchable">
+                <h2>Introduction <button class="checkpoint-btn" data-section="intro">Mark Complete</button></h2>
+                <p>You are learning Django by reading a real ESOP (Employee Share Ownership Plan) system.</p>
+                <p>This codebase has two goals:</p>
+                <ul>
+                    <li>Manage share vesting and dividends for employees</li>
+                    <li>Keep each company's data isolated from other companies (this is called <span class="glossary-term" data-term="tenant-isolation">tenant isolation</span>)</li>
+                </ul>
+                <p>This guide teaches you how Django works by showing you real code patterns.</p>
+                <p>You will learn to trace a request from URL to response.</p>
+                <p>You will learn to predict what happens when a user clicks a button or calls an API endpoint.</p>
+
+                <h2>Part 1: Repo Map and Mental Model <button class="checkpoint-btn" data-section="part1">Mark Complete</button></h2>
+
+                <h3>Config vs Apps vs Templates</h3>
+                <p>Django projects are organized into folders with specific purposes.</p>
+                <ul>
+                    <li><strong>config/</strong> - holds settings and top-level URL routing. The file <code>config/settings/base.py</code> defines security rules and middleware.</li>
+                    <li><strong>apps/</strong> - contains features. Each folder inside (like <code>apps/month_end/</code> or <code>apps/api/</code>) is called a <span class="glossary-term" data-term="django-app">Django app</span>. Apps have models (database tables), views (logic), and other files.</li>
+                    <li><strong>templates/</strong> - stores HTML files. Django renders these with data from views.</li>
+                </ul>
+
+                <div class="note">
+                    <strong>Key insight:</strong> Django separates configuration (config), business logic (apps), and presentation (templates).
+                </div>
+
+                <h3>Two Interfaces: Web and API</h3>
+                <p>This codebase serves two types of users.</p>
+
+                <h4>Web Interface (Class-Based Views)</h4>
+                <p>Web users visit pages in a browser. They see HTML templates.</p>
+                <p>Django uses <span class="glossary-term" data-term="cbv">Class-Based Views (CBVs)</span> to handle these requests.</p>
+                <p>Example: <code>apps/month_end/views.py</code> has views like <code>MonthEndRunListView</code> that render HTML.</p>
+
+                <h4>API Interface (Django REST Framework)</h4>
+                <p>API users send JSON and receive JSON. They might be mobile apps or scripts.</p>
+                <p>Django uses <span class="glossary-term" data-term="drf">Django REST Framework (DRF)</span> for this.</p>
+                <p>Example: <code>apps/api/views.py</code> has <span class="glossary-term" data-term="viewset">ViewSets</span> like <code>DividendRunViewSet</code>.</p>
+
+                <div class="note">
+                    <strong>Remember:</strong> Web uses CBVs and returns HTML. API uses ViewSets and returns JSON.
+                </div>
+
+                <h3>Tenant Isolation: Two Different Mechanisms</h3>
+                <p>Tenant isolation means Company A cannot see Company B's data.</p>
+                <p>This codebase enforces isolation differently for web and API.</p>
+
+                <h4>Web: URL-Based Scoping</h4>
+                <p>Web URLs include <code>company_pk</code> (the company's ID).</p>
+                <p>Example URL pattern (not shown in snippets): <code>/companies/&lt;company_pk&gt;/month-end-runs/</code></p>
+                <p>The view loads the company from <code>company_pk</code> and scopes all queries to that company.</p>
+
+<pre><code># From apps/month_end/views.py
+class MonthEndCompanyMixin:
+    def dispatch(self, request, *args, **kwargs):
+        self.company = get_object_or_404(Company, pk=kwargs["company_pk"])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return MonthEndRun.objects.for_tenant(self.company)</code><button class="copy-btn">Copy</button></pre>
+
+                <p>This mixin loads the company from the URL and filters all queries by it.</p>
+
+                <h4>API: User-Based Scoping</h4>
+                <p>API requests do not have <code>company_pk</code> in the URL.</p>
+                <p>Instead, the API reads <code>request.user.company</code>.</p>
+                <p>Every user belongs to one company. Their API calls only see their company's data.</p>
+
+<pre><code># From apps/api/views.py
+class TenantScopedViewSetMixin:
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if hasattr(self.request.user, "company") and self.request.user.company:
+            return qs.filter(company=self.request.user.company)
+        # If user has no company, return unfiltered (admin users)
+        return qs</code><button class="copy-btn">Copy</button></pre>
+
+                <div class="warning">
+                    <strong>Risk:</strong> If a user has no company, this returns the full queryset. We will explore this risk in exercises.
+                </div>
+
+                <p>The API also uses <span class="glossary-term" data-term="object-permission">object-level permissions</span> to double-check access.</p>
+
+                <h2>Part 2: Trace a Request End to End (Web) <button class="checkpoint-btn" data-section="part2">Mark Complete</button></h2>
+
+                <h3>Step-by-Step: GET Request (Viewing a List)</h3>
+                <p>Let's trace what happens when a user visits a page showing month-end runs.</p>
+
+                <div class="flow-diagram">
+                    <div class="flow-step"><strong>1. URL Matching</strong> - Django matches the URL to a route in <code>urls.py</code> (not shown in snippets). The route points to a view and extracts <code>company_pk</code> from the URL.</div>
+                    <div class="flow-step"><strong>2. View Dispatch</strong> - Django calls <code>MonthEndRunListView.dispatch()</code>. The <code>MonthEndCompanyMixin</code> runs first and loads the company.</div>
+                    <div class="flow-step"><strong>3. Queryset Scoping</strong> - The view calls <code>get_queryset()</code>, which uses <code>MonthEndRun.objects.for_tenant(self.company)</code> to filter runs by the company.</div>
+                    <div class="flow-step"><strong>4. Template Context</strong> - The view passes the filtered queryset to the template as <code>object_list</code> or a named variable.</div>
+                    <div class="flow-step"><strong>5. Template Render</strong> - Django renders the HTML template with the context data and returns it to the browser.</div>
+                </div>
+
+                <h3>Step-by-Step: POST Request (State Change)</h3>
+                <p>Now let's trace what happens when a user approves a month-end run.</p>
+
+                <div class="flow-diagram">
+                    <div class="flow-step"><strong>1. URL Matching</strong> - The POST request matches a route like <code>/companies/&lt;company_pk&gt;/month-end-runs/&lt;pk&gt;/approve/</code>.</div>
+                    <div class="flow-step"><strong>2. View Dispatch</strong> - Django calls <code>MonthEndRunApproveView.post()</code>. The mixin loads the company and the run.</div>
+                    <div class="flow-step"><strong>3. Service Layer Call</strong> - The view does NOT change the database directly. Instead, it calls <code>approve_run(run, user)</code> from the <span class="glossary-term" data-term="service-layer">service layer</span>.</div>
+                    <div class="flow-step"><strong>4. State Transition</strong> - The service layer checks if the transition is valid, enforces business rules (like <span class="glossary-term" data-term="four-eyes">four-eyes approval</span>), updates the database, and logs an <span class="glossary-term" data-term="audit-log">audit log</span>.</div>
+                    <div class="flow-step"><strong>5. Feedback</strong> - The view uses Django messages to show success ("Run approved") and redirects the user back to the detail page.</div>
+                </div>
+
+<pre><code># From apps/month_end/views.py (conceptual, actual code varies)
+class MonthEndRunApproveView(MonthEndCompanyMixin, View):
+    def post(self, request, company_pk, pk):
+        run = get_object_or_404(MonthEndRun, pk=pk, company=self.company)
+        try:
+            approve_run(run, request.user)
+            messages.success(request, "Month-end run approved successfully.")
+        except InvalidStateTransitionError as e:
+            messages.error(request, str(e))
+        return redirect("month-end-run-detail", company_pk=company_pk, pk=pk)</code><button class="copy-btn">Copy</button></pre>
+
+                <h3>Why the Service Layer Exists</h3>
+                <p>The service layer is code in files like <code>apps/month_end/services.py</code>.</p>
+                <p>It contains business logic that is too complex for views.</p>
+
+                <p>The service layer protects you from:</p>
+                <ul>
+                    <li><strong>Invalid state transitions</strong> - You cannot go from COMPLETED to DRAFT directly.</li>
+                    <li><strong>Business rule violations</strong> - You cannot approve your own month-end run (four-eyes principle).</li>
+                    <li><strong>Data corruption</strong> - Service functions use <code>transaction.atomic()</code> so failures roll back all changes.</li>
+                    <li><strong>Missing audit logs</strong> - Every state change is logged automatically.</li>
+                </ul>
+
+                <div class="note">
+                    <strong>Rule:</strong> Views handle HTTP concerns (parsing requests, rendering responses). Services handle business logic (validation, state changes, auditing).
+                </div>
+
+                <h2>Part 3: Trace a Request End to End (API) <button class="checkpoint-btn" data-section="part3">Mark Complete</button></h2>
+
+                <h3>Step-by-Step: GET Request (List Endpoint)</h3>
+                <p>Let's trace what happens when an API client calls <code>GET /api/v1/dividend-allocations/?run=123</code>.</p>
+
+                <div class="flow-diagram">
+                    <div class="flow-step"><strong>1. URL Routing</strong> - Django matches <code>/api/v1/dividend-allocations/</code> to the router in <code>apps/api/urls.py</code>. The router maps it to <code>DividendAllocationViewSet.list()</code>.</div>
+                    <div class="flow-step"><strong>2. Authentication</strong> - DRF checks for a token in the <code>Authorization: Token &lt;token&gt;</code> header or a session cookie. If neither is present, the request is rejected (401).</div>
+                    <div class="flow-step"><strong>3. View-Level Permission</strong> - DRF calls <code>has_permission()</code> on the permission classes. For this endpoint, it checks if the user is authenticated.</div>
+                    <div class="flow-step"><strong>4. Queryset Scoping</strong> - The viewset calls <code>get_queryset()</code>. The <code>TenantScopedViewSetMixin</code> filters by <code>request.user.company</code>. Then the viewset applies the <code>?run=123</code> filter.</div>
+                    <div class="flow-step"><strong>5. Object-Level Permission</strong> - DRF calls <code>has_object_permission()</code> on each allocation. Beneficiaries can only see their own allocations.</div>
+                    <div class="flow-step"><strong>6. Serialization</strong> - DRF passes the filtered queryset to a <span class="glossary-term" data-term="serializer">serializer</span>, which converts database objects to JSON.</div>
+                    <div class="flow-step"><strong>7. Response</strong> - DRF returns a JSON response with the list of allocations.</div>
+                </div>
+
+<pre><code># From apps/api/views.py
+class DividendAllocationViewSet(TenantScopedViewSetMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = DividendAllocation.objects.all()
+    serializer_class = DividendAllocationSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrSchemeAdmin]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        run_id = self.request.query_params.get("run")
+        if run_id:
+            qs = qs.filter(run_id=run_id)
+        # Beneficiaries only see their own allocations
+        if self.request.user.role == UserRole.BENEFICIARY:
+            qs = qs.filter(beneficiary__user=self.request.user)
+        return qs</code><button class="copy-btn">Copy</button></pre>
+
+                <h3>Step-by-Step: POST Request (Custom Action)</h3>
+                <p>Let's trace what happens when an API client calls <code>POST /api/v1/dividend-runs/123/approve/</code>.</p>
+
+                <div class="flow-diagram">
+                    <div class="flow-step"><strong>1. URL Routing</strong> - The router matches this to <code>DividendRunViewSet.approve()</code> because of the <code>@action</code> decorator.</div>
+                    <div class="flow-step"><strong>2. Authentication</strong> - Same as above. Token or session required.</div>
+                    <div class="flow-step"><strong>3. View-Level Permission</strong> - The <code>@action</code> specifies <code>permission_classes=[IsSchemeAdmin]</code>, so only scheme admins can call this.</div>
+                    <div class="flow-step"><strong>4. Object Retrieval</strong> - DRF calls <code>get_object()</code>, which retrieves the run with <code>pk=123</code> and applies tenant scoping.</div>
+                    <div class="flow-step"><strong>5. Object-Level Permission</strong> - DRF checks <code>has_object_permission()</code>. The tenant permission verifies the run belongs to the user's company.</div>
+                    <div class="flow-step"><strong>6. Transaction Start</strong> - The action is wrapped in <code>transaction.atomic()</code>, so if anything fails, all changes roll back.</div>
+                    <div class="flow-step"><strong>7. Service Layer Call</strong> - The action calls <code>approve_run(run, request.user)</code> from the service layer.</div>
+                    <div class="flow-step"><strong>8. Audit Logging</strong> - The service layer logs the approval with <code>log_audit()</code>.</div>
+                    <div class="flow-step"><strong>9. Response</strong> - The action returns a JSON response with status 200 and a message like <code>{"message": "Run approved successfully"}</code>.</div>
+                </div>
+
+<pre><code># From apps/api/views.py
+class DividendRunViewSet(TenantScopedViewSetMixin, viewsets.ModelViewSet):
+    @action(detail=True, methods=["post"], permission_classes=[IsSchemeAdmin])
+    def approve(self, request, pk=None):
+        run = self.get_object()
+        with transaction.atomic():
+            try:
+                approve_run(run, request.user)
+                return Response({"message": "Run approved successfully"})
+            except InvalidStateTransitionError as e:
+                return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)</code><button class="copy-btn">Copy</button></pre>
+
+                <h3>Custom Actions vs CRUD</h3>
+                <p>DRF provides default CRUD operations (Create, Read, Update, Delete).</p>
+                <p>For example, <code>POST /api/v1/dividend-runs/</code> creates a new run.</p>
+                <p>Custom actions use the <code>@action</code> decorator to add extra endpoints like <code>approve</code>, <code>process</code>, and <code>reset</code>.</p>
+
+                <div class="note">
+                    <strong>Pattern:</strong> Use custom actions for state transitions and business operations that do not map to simple CRUD.
+                </div>
+
+                <h3>When transaction.atomic() Matters</h3>
+                <p>The <code>transaction.atomic()</code> decorator wraps code in a database transaction.</p>
+                <p>If any line inside raises an exception, Django rolls back all changes.</p>
+
+                <p>Use it when:</p>
+                <ul>
+                    <li>You update multiple database records in one operation</li>
+                    <li>You want all changes to succeed or all to fail (no partial updates)</li>
+                    <li>You are changing state that affects money or compliance</li>
+                </ul>
+
+                <p>Example: processing a dividend run creates hundreds of allocations. If allocation 50 fails, you want to undo allocations 1 through 49.</p>
+
+<pre><code># From apps/dividends/services.py
+@transaction.atomic()
+def process_run(run: DividendRun) -> DividendRun:
+    _validate_transition(run, RunStatus.PROCESSING)
+    _change_status(run, RunStatus.PROCESSING)
+    try:
+        _create_allocations(run)
+        totals = _compute_totals(run)
+        run.total_shares = totals["shares"]
+        run.total_dividend = totals["dividend"]
+        run.processed_at = timezone.now()
+        _change_status(run, RunStatus.COMPLETED)
+        return run
+    except Exception as e:
+        logger.exception("Processing failed for run %s", run.pk)
+        run.failure_reason = str(e)
+        _change_status(run, RunStatus.FAILED)
+        run.save()
+        raise</code><button class="copy-btn">Copy</button></pre>
+
+                <p>If <code>_create_allocations()</code> fails, Django rolls back the status change to PROCESSING and the run stays in APPROVED state.</p>
+
+                <h2>Part 4: Permissions and Tenant Access <button class="checkpoint-btn" data-section="part4">Mark Complete</button></h2>
+
+                <h3>has_permission vs has_object_permission</h3>
+                <p>DRF checks permissions at two levels.</p>
+
+                <h4>View-Level: has_permission</h4>
+                <p>This runs before Django retrieves any objects.</p>
+                <p>It decides if the user can access the endpoint at all.</p>
+                <p>Example: <code>IsAuthenticated</code> checks if the user is logged in.</p>
+
+<pre><code># From apps/api/permissions.py
+class IsSchemeAdmin(BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.role == UserRole.SCHEME_ADMIN</code><button class="copy-btn">Copy</button></pre>
+
+                <h4>Object-Level: has_object_permission</h4>
+                <p>This runs after Django retrieves the object.</p>
+                <p>It decides if the user can access this specific object.</p>
+                <p>Example: <code>IsTenantMember</code> checks if the object belongs to the user's company.</p>
+
+<pre><code># From apps/api/permissions.py
+class IsTenantMember(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if not hasattr(obj, "company"):
+            return False
+        return request.user.can_access_company(obj.company)</code><button class="copy-btn">Copy</button></pre>
+
+                <div class="warning">
+                    <strong>Risk:</strong> If <code>obj</code> has no <code>company</code> attribute, this permission denies access. But what if the object should be accessible to everyone (like reference data)? We handle that by not applying <code>IsTenantMember</code> to reference endpoints.
+                </div>
+
+                <h3>Permission Scenarios</h3>
+                <p>Let's trace 8 scenarios to understand how permissions combine.</p>
+
+                <h4>Scenario 1: Scheme Admin Reading Own Company's Dividend Run</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>GET /api/v1/dividend-runs/123/</code></li>
+                    <li><strong>User:</strong> Scheme admin at Company A</li>
+                    <li><strong>Object:</strong> Dividend run belonging to Company A</li>
+                    <li><strong>View-Level Permission:</strong> <code>IsAuthenticated</code> passes (user is logged in).</li>
+                    <li><strong>Queryset Scoping:</strong> <code>TenantScopedViewSetMixin</code> filters by Company A.</li>
+                    <li><strong>Object-Level Permission:</strong> <code>TenantScopedPermission.has_object_permission()</code> checks <code>obj.company == user.company</code>. Passes.</li>
+                    <li><strong>Result:</strong> <span style="color: green; font-weight: bold;">ALLOW</span></li>
+                </ul>
+
+                <h4>Scenario 2: Scheme Admin Trying to Read Another Company's Dividend Run</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>GET /api/v1/dividend-runs/456/</code></li>
+                    <li><strong>User:</strong> Scheme admin at Company A</li>
+                    <li><strong>Object:</strong> Dividend run belonging to Company B</li>
+                    <li><strong>View-Level Permission:</strong> Passes.</li>
+                    <li><strong>Queryset Scoping:</strong> The queryset filters by Company A, so run 456 is not in the queryset.</li>
+                    <li><strong>Object Retrieval:</strong> Django raises <code>Http404</code> because run 456 is not found in the filtered queryset.</li>
+                    <li><strong>Result:</strong> <span style="color: red; font-weight: bold;">DENY (404)</span></li>
+                </ul>
+
+                <div class="note">
+                    <strong>Key insight:</strong> Tenant scoping happens at the queryset level. If the object is not in the queryset, the request fails before object permissions run.
+                </div>
+
+                <h4>Scenario 3: Beneficiary Trying to Access Another Beneficiary's Allocation</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>GET /api/v1/dividend-allocations/789/</code></li>
+                    <li><strong>User:</strong> Beneficiary Alice at Company A</li>
+                    <li><strong>Object:</strong> Allocation for Beneficiary Bob at Company A</li>
+                    <li><strong>View-Level Permission:</strong> <code>IsAuthenticated</code> passes.</li>
+                    <li><strong>Queryset Scoping:</strong> The viewset filters by company and then by <code>beneficiary__user=request.user</code>. Bob's allocation is not in the queryset.</li>
+                    <li><strong>Object Retrieval:</strong> Django raises <code>Http404</code>.</li>
+                    <li><strong>Result:</strong> <span style="color: red; font-weight: bold;">DENY (404)</span></li>
+                </ul>
+
+                <h4>Scenario 4: Beneficiary Accessing Own Vesting Event</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>GET /api/v1/vesting-events/111/</code></li>
+                    <li><strong>User:</strong> Beneficiary Alice at Company A</li>
+                    <li><strong>Object:</strong> Vesting event for Alice</li>
+                    <li><strong>View-Level Permission:</strong> <code>IsAuthenticated</code> passes.</li>
+                    <li><strong>Queryset Scoping:</strong> Filtered by company and <code>beneficiary__user=request.user</code>. Event 111 is in the queryset.</li>
+                    <li><strong>Object-Level Permission:</strong> <code>IsOwnerOrSchemeAdmin.has_object_permission()</code> checks if <code>obj.beneficiary.user == request.user</code>. Passes.</li>
+                    <li><strong>Result:</strong> <span style="color: green; font-weight: bold;">ALLOW</span></li>
+                </ul>
+
+                <h4>Scenario 5: Unauthenticated Access</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>GET /api/v1/beneficiaries/</code></li>
+                    <li><strong>User:</strong> Anonymous (no token or session)</li>
+                    <li><strong>View-Level Permission:</strong> <code>IsAuthenticated.has_permission()</code> fails.</li>
+                    <li><strong>Result:</strong> <span style="color: red; font-weight: bold;">DENY (401)</span></li>
+                </ul>
+
+                <h4>Scenario 6: Reference Data Endpoint (JSE Companies)</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>GET /api/v1/jse-companies/?q=sasol</code></li>
+                    <li><strong>User:</strong> Any authenticated user</li>
+                    <li><strong>Object:</strong> Reference data (JSE company records)</li>
+                    <li><strong>View-Level Permission:</strong> <code>IsAuthenticated</code> passes.</li>
+                    <li><strong>Queryset Scoping:</strong> <code>JSECompanySearchViewSet</code> does NOT inherit <code>TenantScopedViewSetMixin</code>. The queryset is not scoped by company.</li>
+                    <li><strong>Object-Level Permission:</strong> Not applied (this is reference data).</li>
+                    <li><strong>Result:</strong> <span style="color: green; font-weight: bold;">ALLOW</span></li>
+                </ul>
+
+                <div class="note">
+                    <strong>Important:</strong> Not all data is tenant-scoped. Reference data like JSE company names is shared across all tenants. The viewset intentionally skips tenant scoping.
+                </div>
+
+                <h4>Scenario 7: Beneficiary Trying to Create a Dividend Run</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>POST /api/v1/dividend-runs/</code></li>
+                    <li><strong>User:</strong> Beneficiary at Company A</li>
+                    <li><strong>View-Level Permission:</strong> <code>IsSchemeAdminOrReadOnly.has_permission()</code> checks the request method. POST is not a safe method, so it requires <code>IsSchemeAdmin</code>. User is a beneficiary, so the check fails.</li>
+                    <li><strong>Result:</strong> <span style="color: red; font-weight: bold;">DENY (403)</span></li>
+                </ul>
+
+<pre><code># From apps/api/permissions.py
+class IsSchemeAdminOrReadOnly(BasePermission):
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return request.user and request.user.is_authenticated
+        return request.user and request.user.role == UserRole.SCHEME_ADMIN</code><button class="copy-btn">Copy</button></pre>
+
+                <h4>Scenario 8: Scheme Admin Creating a Dividend Run (User Has No Company)</h4>
+                <ul>
+                    <li><strong>Request:</strong> <code>POST /api/v1/dividend-runs/</code> with <code>{"name": "Q1 2024", "company": 999}</code></li>
+                    <li><strong>User:</strong> Scheme admin with <code>user.company = None</code></li>
+                    <li><strong>View-Level Permission:</strong> <code>IsSchemeAdmin</code> passes.</li>
+                    <li><strong>perform_create:</strong> The viewset calls <code>TenantScopedViewSetMixin.perform_create()</code>. This method checks if <code>request.user.company</code> exists. If not, it raises <code>TenantMismatchError</code>.</li>
+                    <li><strong>Result:</strong> <span style="color: red; font-weight: bold;">DENY (403)</span></li>
+                </ul>
+
+<pre><code># From apps/api/views.py
+def perform_create(self, serializer):
+    if not hasattr(self.request.user, "company") or not self.request.user.company:
+        raise TenantMismatchError("User must belong to a company to create resources.")
+    serializer.save(company=self.request.user.company, created_by=self.request.user)
+    log_audit(
+        user=self.request.user,
+        action=AuditAction.CREATE,
+        content_object=serializer.instance,
+        extra=_make_json_safe(serializer.validated_data),
+    )</code><button class="copy-btn">Copy</button></pre>
+
+                <div class="danger">
+                    <strong>Security note:</strong> The API prevents users without a company from creating or modifying tenant-scoped resources. This is critical for tenant isolation.
+                </div>
+
+                <h2>Part 5: Error Responses and Debugging <button class="checkpoint-btn" data-section="part5">Mark Complete</button></h2>
+
+                <h3>The JSON Error Envelope</h3>
+                <p>The API returns errors in a consistent format.</p>
+                <p>This format is defined in <code>apps/api/exceptions.py</code>.</p>
+
+<pre><code># From apps/api/exceptions.py
+def custom_exception_handler(exc, context):
+    response = exception_handler(exc, context)
+    if response is not None:
+        error_code = _get_error_code(exc)
+        error_payload = {
+            "error": {
+                "code": error_code,
+                "message": str(exc),
+            }
+        }
+        if hasattr(exc, "detail") and isinstance(exc.detail, dict):
+            error_payload["error"]["details"] = exc.detail
+        response.data = error_payload
+    return response</code><button class="copy-btn">Copy</button></pre>
+
+                <p>Every API error response looks like this:</p>
+<pre><code>{
+  "error": {
+    "code": "tenant_mismatch",
+    "message": "User must belong to a company to create resources.",
+    "details": {...}  // optional
+  }
+}</code><button class="copy-btn">Copy</button></pre>
+
+                <h3>Common Errors Table</h3>
+                <table>
+                    <tr>
+                        <th>HTTP Status</th>
+                        <th>error.code</th>
+                        <th>Typical Cause</th>
+                        <th>Where to Debug</th>
+                    </tr>
+                    <tr>
+                        <td>401</td>
+                        <td>not_authenticated</td>
+                        <td>Missing or invalid token</td>
+                        <td>Authentication middleware, check token in header</td>
+                    </tr>
+                    <tr>
+                        <td>403</td>
+                        <td>permission_denied</td>
+                        <td>User lacks required role or object access</td>
+                        <td>Permission classes in viewset, check user.role and object.company</td>
+                    </tr>
+                    <tr>
+                        <td>403</td>
+                        <td>tenant_mismatch</td>
+                        <td>User has no company or object belongs to another company</td>
+                        <td>TenantScopedViewSetMixin.perform_create or object permissions</td>
+                    </tr>
+                    <tr>
+                        <td>404</td>
+                        <td>not_found</td>
+                        <td>Object does not exist or is filtered out by tenant scoping</td>
+                        <td>Queryset scoping in get_queryset(), check company filter</td>
+                    </tr>
+                    <tr>
+                        <td>400</td>
+                        <td>invalid_state_transition</td>
+                        <td>Attempted state change violates the state machine</td>
+                        <td>Service layer _validate_transition(), check VALID_TRANSITIONS</td>
+                    </tr>
+                    <tr>
+                        <td>400</td>
+                        <td>validation_error</td>
+                        <td>Serializer validation failed (missing fields, invalid data)</td>
+                        <td>Serializer validation, check serializer.errors</td>
+                    </tr>
+                    <tr>
+                        <td>429</td>
+                        <td>rate_limit_exceeded</td>
+                        <td>User exceeded allowed request rate</td>
+                        <td>Throttling settings in REST_FRAMEWORK config</td>
+                    </tr>
+                    <tr>
+                        <td>500</td>
+                        <td>server_error</td>
+                        <td>Unhandled exception in view or service layer</td>
+                        <td>Server logs, check for exceptions and stack traces</td>
+                    </tr>
+                </table>
+
+                <h2>Part 6: State Machines and Idempotency <button class="checkpoint-btn" data-section="part6">Mark Complete</button></h2>
+
+                <h3>VALID_TRANSITIONS Concept</h3>
+                <p>Both <code>apps/month_end/services.py</code> and <code>apps/dividends/services.py</code> define a state machine.</p>
+                <p>A state machine is a set of allowed transitions between states.</p>
+                <p>Example from the services:</p>
+
+<pre><code># From apps/month_end/services.py and apps/dividends/services.py
+VALID_TRANSITIONS = {
+    RunStatus.DRAFT: [RunStatus.PENDING_APPROVAL],
+    RunStatus.PENDING_APPROVAL: [RunStatus.APPROVED, RunStatus.DRAFT],
+    RunStatus.APPROVED: [RunStatus.PROCESSING, RunStatus.DRAFT],
+    RunStatus.PROCESSING: [RunStatus.COMPLETED, RunStatus.FAILED],
+    RunStatus.COMPLETED: [RunStatus.DRAFT],
+    RunStatus.FAILED: [RunStatus.DRAFT],
+}</code><button class="copy-btn">Copy</button></pre>
+
+                <p>This dictionary maps each state to the states it can transition to.</p>
+                <p>Example: From APPROVED, you can go to PROCESSING or DRAFT.</p>
+                <p>You cannot go from APPROVED to COMPLETED directly.</p>
+
+                <h3>Visual State Diagram</h3>
+                <div class="state-diagram">
+                    <div style="text-align: center;">
+                        <div class="state draft">DRAFT</div>
+                        <div class="arrow">↓</div>
+                        <div class="state pending">PENDING_APPROVAL</div>
+                        <div class="arrow">↓</div>
+                        <div class="state approved">APPROVED</div>
+                        <div class="arrow">↓</div>
+                        <div class="state processing">PROCESSING</div>
+                        <div class="arrow">↙ ↘</div>
+                        <div style="display: inline-block; width: 45%; text-align: center;">
+                            <div class="state completed">COMPLETED</div>
+                        </div>
+                        <div style="display: inline-block; width: 45%; text-align: center;">
+                            <div class="state failed">FAILED</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; text-align: center; color: #7f8c8d;">
+                        <p>From COMPLETED or FAILED, you can reset to DRAFT.</p>
+                        <p>From PENDING_APPROVAL or APPROVED, you can go back to DRAFT.</p>
+                    </div>
+                </div>
+
+                <h3>Four-Eyes Principle</h3>
+                <p>The four-eyes principle means one person cannot both create and approve a run.</p>
+                <p>This prevents fraud and ensures accountability.</p>
+
+<pre><code># From apps/month_end/services.py and apps/dividends/services.py
+def approve_run(run, user):
+    if run.created_by == user:
+        raise PermissionDenied("You cannot approve a run you created.")
+    _validate_transition(run, RunStatus.APPROVED)
+    run.approved_by = user
+    run.approved_at = timezone.now()
+    _change_status(run, RunStatus.APPROVED)
+    return run</code><button class="copy-btn">Copy</button></pre>
+
+                <p>If the user who created the run tries to approve it, the function raises <code>PermissionDenied</code>.</p>
+
+                <h3>Idempotency Guard Patterns</h3>
+                <p>Idempotency means running an operation multiple times has the same effect as running it once.</p>
+                <p>Example: If you process a dividend run twice, you should not create duplicate allocations.</p>
+
+<pre><code># From apps/dividends/services.py
+def _create_allocations(run: DividendRun):
+    # Idempotency guard: exit if allocations already exist
+    if DividendAllocation.objects.filter(run=run).exists():
+        logger.info("Allocations already exist for run %s, skipping creation.", run.pk)
+        return
+
+    beneficiaries = Beneficiary.objects.filter(company=run.company, status=BeneficiaryStatus.ACTIVE)
+    allocations = []
+    for b in beneficiaries:
+        allocation = DividendAllocation(
+            run=run,
+            beneficiary=b,
+            shares=b.vested_shares,
+            dividend_amount=b.vested_shares * run.dividend_per_share,
+        )
+        allocations.append(allocation)
+    DividendAllocation.objects.bulk_create(allocations)</code><button class="copy-btn">Copy</button></pre>
+
+                <p>The guard checks if allocations already exist. If they do, the function exits early without creating duplicates.</p>
+
+                <h3>Why Decimal Is Used</h3>
+                <p>The codebase uses Python's <code>Decimal</code> type for money and share amounts.</p>
+                <p>This is because floating-point numbers (like <code>0.1 + 0.2</code>) can have rounding errors.</p>
+                <p>Decimal ensures exact precision for financial calculations.</p>
+
+<pre><code># Example (not from snippets, but illustrates the concept)
+from decimal import Decimal
+
+# BAD (floating point)
+total = 0.1 + 0.2  # 0.30000000000000004
+
+# GOOD (Decimal)
+total = Decimal("0.1") + Decimal("0.2")  # Decimal('0.3')</code><button class="copy-btn">Copy</button></pre>
+
+                <div class="danger">
+                    <strong>Rule:</strong> Always use Decimal for money, tax rates, and share amounts. Never use float.
+                </div>
+
+                <h2>Part 7: Exercises <button class="checkpoint-btn" data-section="part7">Mark Complete</button></h2>
+
+                <p>See the Flow Simulator and Final Quiz tabs for interactive exercises that test your understanding.</p>
+            </div>
+        </div>
+
+        <div class="tab-content" id="simulator">
+            <div class="searchable">
+                <h2>Flow Simulator</h2>
+                <p>This simulator helps you predict what happens when a request is made.</p>
+                <p>Select the options below and click "Simulate Request" to see the result.</p>
+
+                <div class="simulator">
+                    <div class="simulator-row">
+                        <label>Interface:</label>
+                        <select id="sim-interface">
+                            <option value="api">API</option>
+                            <option value="web">Web</option>
+                        </select>
+                    </div>
+
+                    <div class="simulator-row">
+                        <label>Method:</label>
+                        <select id="sim-method">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                        </select>
+                    </div>
+
+                    <div class="simulator-row">
+                        <label>Authentication:</label>
+                        <select id="sim-auth">
+                            <option value="none">Anonymous (no auth)</option>
+                            <option value="session">Session (cookie)</option>
+                            <option value="token">Token (header)</option>
+                        </select>
+                    </div>
+
+                    <div class="simulator-row">
+                        <label>User Role:</label>
+                        <select id="sim-role">
+                            <option value="none">N/A (not authenticated)</option>
+                            <option value="scheme_admin">Scheme Admin</option>
+                            <option value="beneficiary">Beneficiary</option>
+                        </select>
+                    </div>
+
+                    <div class="simulator-row">
+                        <label>user.company:</label>
+                        <select id="sim-company">
+                            <option value="present">Present (user belongs to Company A)</option>
+                            <option value="missing">Missing (user.company is None)</option>
+                        </select>
+                    </div>
+
+                    <div class="simulator-row">
+                        <label>Endpoint:</label>
+                        <select id="sim-endpoint">
+                            <option value="get-allocations">GET /api/v1/dividend-allocations/?run=ID</option>
+                            <option value="post-approve">POST /api/v1/dividend-runs/ID/approve/</option>
+                            <option value="post-process">POST /api/v1/month-end-runs/ID/process/ (with params)</option>
+                            <option value="get-jse">GET /api/v1/jse-companies/?q=sasol</option>
+                        </select>
+                    </div>
+
+                    <button class="simulate-btn" onclick="runSimulation()">Simulate Request</button>
+
+                    <div class="simulator-output" id="sim-output"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="glossary">
+            <div class="searchable">
+                <h2>Glossary</h2>
+                <p>Click a term in the guide to jump to its definition here.</p>
+
+                <h3 id="term-tenant-isolation">Tenant Isolation</h3>
+                <p>A security pattern where each company's data is kept separate from other companies.</p>
+                <p>In this codebase, tenant isolation is enforced by filtering queries by <code>company</code>.</p>
+
+                <h3 id="term-django-app">Django App</h3>
+                <p>A Python package inside the <code>apps/</code> folder that contains models, views, and other code for a specific feature.</p>
+                <p>Examples: <code>apps/month_end/</code>, <code>apps/dividends/</code>, <code>apps/api/</code>.</p>
+
+                <h3 id="term-cbv">Class-Based View (CBV)</h3>
+                <p>A Django view written as a class instead of a function.</p>
+                <p>CBVs provide reusable patterns like <code>ListView</code>, <code>DetailView</code>, and <code>CreateView</code>.</p>
+
+                <h3 id="term-drf">Django REST Framework (DRF)</h3>
+                <p>A library for building REST APIs in Django.</p>
+                <p>It provides ViewSets, serializers, and permission classes.</p>
+
+                <h3 id="term-viewset">ViewSet</h3>
+                <p>A DRF class that combines logic for multiple related endpoints (list, create, retrieve, update, delete).</p>
+                <p>Example: <code>BeneficiaryViewSet</code> handles all CRUD operations for beneficiaries.</p>
+
+                <h3 id="term-object-permission">Object-Level Permission</h3>
+                <p>A permission check that runs after an object is retrieved.</p>
+                <p>It decides if the user can access this specific object.</p>
+                <p>Example: checking if <code>obj.company == user.company</code>.</p>
+
+                <h3 id="term-service-layer">Service Layer</h3>
+                <p>Code that contains business logic separate from views and models.</p>
+                <p>In this codebase, service functions handle state transitions, validation, and audit logging.</p>
+                <p>Files: <code>apps/month_end/services.py</code>, <code>apps/dividends/services.py</code>.</p>
+
+                <h3 id="term-four-eyes">Four-Eyes Principle</h3>
+                <p>A control where one person cannot both create and approve the same record.</p>
+                <p>This prevents fraud and ensures accountability.</p>
+
+                <h3 id="term-audit-log">Audit Log</h3>
+                <p>A record of who did what and when.</p>
+                <p>Every state change, creation, update, and deletion is logged for compliance and debugging.</p>
+
+                <h3 id="term-serializer">Serializer</h3>
+                <p>A DRF class that converts database objects to JSON and validates input.</p>
+                <p>Example: <code>BeneficiarySerializer</code> defines which fields are included in the API response.</p>
+            </div>
+        </div>
+
+        <div class="tab-content" id="quiz">
+            <div class="searchable">
+                <h2>Final Quiz (25 Questions) <button class="checkpoint-btn" data-section="quiz">Mark Complete</button></h2>
+                <p>Test your understanding of Django and this codebase.</p>
+                <p>Try to answer each question before revealing the answer.</p>
+
+                <div class="quiz-question">
+                    <strong>1. What is the primary difference between the web interface and the API interface in this codebase?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>Web uses Class-Based Views (CBVs) and returns HTML templates. API uses Django REST Framework ViewSets and returns JSON.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>2. How does the web interface enforce tenant isolation?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>Web URLs include <code>company_pk</code>. Views load the company from the URL and filter all queries by it using <code>MonthEndRun.objects.for_tenant(company)</code>.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>3. How does the API interface enforce tenant isolation?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>API reads <code>request.user.company</code> and filters queries by it in <code>TenantScopedViewSetMixin.get_queryset()</code>. Object-level permissions double-check access.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>4. What happens if a user with no company tries to create a dividend run via the API?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The API raises <code>TenantMismatchError</code> in <code>perform_create()</code> and returns a 403 response with error code <code>tenant_mismatch</code>.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>5. Why does the service layer exist? Name three protections it provides.</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The service layer protects from:</p>
+                        <ul>
+                            <li>Invalid state transitions (enforces state machine)</li>
+                            <li>Business rule violations (four-eyes principle)</li>
+                            <li>Data corruption (uses transaction.atomic())</li>
+                            <li>Missing audit logs (logs every state change)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>6. What is the difference between <code>has_permission()</code> and <code>has_object_permission()</code>?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p><code>has_permission()</code> runs before objects are retrieved and decides if the user can access the endpoint at all. <code>has_object_permission()</code> runs after object retrieval and decides if the user can access this specific object.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>7. A scheme admin from Company A tries to GET /api/v1/dividend-runs/456/, which belongs to Company B. What happens and why?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The request fails with 404. The queryset is filtered by <code>company=Company A</code>, so run 456 is not in the queryset. Django raises <code>Http404</code> before object permissions run.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>8. Why can beneficiaries access GET /api/v1/jse-companies/ without tenant scoping?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>JSE companies are reference data (publicly traded companies). They are not tenant-specific, so the endpoint intentionally skips tenant scoping. All authenticated users can access them.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>9. What is the JSON error envelope format used by this API?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+<pre><code>{
+  "error": {
+    "code": "...",
+    "message": "...",
+    "details": {...}  // optional
+  }
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>10. A user calls POST /api/v1/dividend-runs/123/approve/ but gets a 403 error with message "You cannot approve a run you created." What principle is being enforced?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The four-eyes principle. One person cannot both create and approve the same run.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>11. What are the valid transitions from the APPROVED state?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>From APPROVED, you can transition to PROCESSING (by calling <code>process_run()</code>) or DRAFT (by calling <code>reset_to_draft()</code>).</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>12. What is idempotency? Give an example from the codebase.</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>Idempotency means running an operation multiple times has the same effect as running it once. Example: <code>_create_allocations()</code> checks if allocations already exist and exits early if they do, preventing duplicates.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>13. Why does the <code>process_run()</code> function use <code>transaction.atomic()</code>?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>It ensures that all database changes (status updates, allocation creation, totals) either all succeed or all roll back. This prevents partial updates and data corruption.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>14. What happens if POST /api/v1/month-end-runs/123/process/ is called without <code>share_price</code> and <code>tax_rate</code> in the request body?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The action returns a 400 error with message "share_price and tax_rate are required" (or similar validation error).</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>15. When is CSRF protection required?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>CSRF protection is required for session-based authentication (cookie). It is NOT required for token-based authentication because tokens are not stored in cookies.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>16. A beneficiary calls GET /api/v1/dividend-allocations/?run=123. The run has allocations for Alice and Bob. Alice is the authenticated user. What does she see?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>Alice sees only her own allocation. The viewset filters by <code>beneficiary__user=request.user</code> when the user role is BENEFICIARY.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>17. What does <code>reset_to_draft()</code> do to allocations or vesting events?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>It deletes all allocations or vesting events associated with the run, resets totals to 0, and changes the status to DRAFT.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>18. Why should you use <code>Decimal</code> instead of <code>float</code> for money?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>Floats have rounding errors that can corrupt financial calculations. Decimal provides exact precision for money and tax rates.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>19. What HTTP status code is returned when a user is not authenticated?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>401 (Unauthorized) with error code <code>not_authenticated</code>.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>20. What HTTP status code is returned when a user is authenticated but lacks permission to access a resource?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>403 (Forbidden) with error code <code>permission_denied</code> or <code>tenant_mismatch</code>.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>21. Name two custom actions (beyond CRUD) available on <code>DividendRunViewSet</code>.</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>approve, process, reset</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>22. A scheme admin creates a beneficiary with <code>POST /api/v1/beneficiaries/</code> and includes <code>"company": 999</code> in the request body (a different company). What company is the beneficiary created with?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The beneficiary is created with <code>company=request.user.company</code>. The request body is ignored. <code>perform_create()</code> overrides the company field server-side to prevent bypassing tenant isolation.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>23. What security setting ensures session cookies are only sent over HTTPS?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p><code>SESSION_COOKIE_SECURE = True</code> in settings (from <code>config/settings/base.py</code>).</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>24. If <code>process_run()</code> fails halfway through, what state is the run left in?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The run is set to FAILED status. The failure reason is stored in <code>run.failure_reason</code>. If <code>transaction.atomic()</code> is used, partial allocations are rolled back.</p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <strong>25. What is the purpose of the <code>@action</code> decorator in DRF ViewSets?</strong>
+                    <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+                    <div class="answer">
+                        <p>The <code>@action</code> decorator adds custom endpoints to a ViewSet beyond the standard CRUD operations. Examples include <code>approve</code>, <code>process</code>, and <code>reset</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetTab = btn.dataset.tab;
+
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+
+        // Collapsible sections
+        document.querySelectorAll('.collapsible').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+
+        // Copy buttons
+        function addCopyButtons() {
+            document.querySelectorAll('pre').forEach(pre => {
+                if (!pre.querySelector('.copy-btn')) {
+                    const btn = document.createElement('button');
+                    btn.className = 'copy-btn';
+                    btn.textContent = 'Copy';
+                    btn.onclick = function() {
+                        const code = pre.querySelector('code').textContent;
+                        navigator.clipboard.writeText(code).then(() => {
+                            btn.textContent = 'Copied!';
+                            btn.classList.add('copied');
+                            setTimeout(() => {
+                                btn.textContent = 'Copy';
+                                btn.classList.remove('copied');
+                            }, 2000);
+                        });
+                    };
+                    pre.appendChild(btn);
+                }
+            });
+        }
+        addCopyButtons();
+
+        // Search functionality
+        const searchBox = document.getElementById('searchBox');
+        searchBox.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.searchable').forEach(section => {
+                if (query === '') {
+                    section.style.display = 'block';
+                } else {
+                    const text = section.textContent.toLowerCase();
+                    section.style.display = text.includes(query) ? 'block' : 'none';
+                }
+            });
+        });
+
+        // Progress tracking
+        const TOTAL_SECTIONS = 8;
+
+        function loadProgress() {
+            const progress = JSON.parse(localStorage.getItem('claudeESOPProgress') || '{}');
+            return progress;
+        }
+
+        function saveProgress(progress) {
+            localStorage.setItem('claudeESOPProgress', JSON.stringify(progress));
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const progress = loadProgress();
+            const completed = Object.values(progress).filter(Boolean).length;
+            const percent = Math.round((completed / TOTAL_SECTIONS) * 100);
+            const fill = document.getElementById('progressFill');
+            fill.style.width = percent + '%';
+            fill.textContent = percent + '%';
+        }
+
+        document.querySelectorAll('.checkpoint-btn').forEach(btn => {
+            const section = btn.dataset.section;
+            const progress = loadProgress();
+            if (progress[section]) {
+                btn.classList.add('completed');
+                btn.textContent = 'Completed ✓';
+            }
+
+            btn.addEventListener('click', function() {
+                const progress = loadProgress();
+                progress[section] = true;
+                saveProgress(progress);
+                this.classList.add('completed');
+                this.textContent = 'Completed ✓';
+            });
+        });
+
+        updateProgressBar();
+
+        // Glossary term links
+        document.querySelectorAll('.glossary-term').forEach(term => {
+            term.addEventListener('click', function() {
+                const termId = this.dataset.term;
+                document.querySelector('[data-tab="glossary"]').click();
+                setTimeout(() => {
+                    document.getElementById('term-' + termId).scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            });
+        });
+
+        // Show/hide answers
+        function toggleAnswer(btn) {
+            const answer = btn.nextElementSibling;
+            if (answer.classList.contains('show')) {
+                answer.classList.remove('show');
+                btn.textContent = 'Show Answer';
+            } else {
+                answer.classList.add('show');
+                btn.textContent = 'Hide Answer';
+            }
+        }
+
+        // Flow simulator
+        function runSimulation() {
+            const iface = document.getElementById('sim-interface').value;
+            const method = document.getElementById('sim-method').value;
+            const auth = document.getElementById('sim-auth').value;
+            const role = document.getElementById('sim-role').value;
+            const company = document.getElementById('sim-company').value;
+            const endpoint = document.getElementById('sim-endpoint').value;
+
+            let output = '=== SIMULATION OUTPUT ===\n\n';
+
+            output += '1. AUTHENTICATION\n';
+            if (auth === 'none') {
+                output += '   Status: FAIL\n';
+                output += '   Reason: No authentication provided\n';
+                output += '   HTTP Status: 401\n';
+                output += '   Error Code: not_authenticated\n\n';
+                output += 'REQUEST DENIED\n';
+                document.getElementById('sim-output').textContent = output;
+                document.getElementById('sim-output').classList.add('show');
+                return;
+            } else if (auth === 'session') {
+                output += '   Method: SessionAuthentication (cookie)\n';
+                output += '   Status: PASS\n';
+            } else if (auth === 'token') {
+                output += '   Method: TokenAuthentication (header)\n';
+                output += '   Status: PASS\n';
+            }
+            output += '\n';
+
+            output += '2. CSRF PROTECTION\n';
+            if (iface === 'api' && auth === 'session' && method !== 'GET') {
+                output += '   Required: YES (session auth + unsafe method)\n';
+                output += '   Must include: X-CSRFToken header\n';
+            } else if (iface === 'web' && method === 'POST') {
+                output += '   Required: YES (web POST)\n';
+                output += '   Must include: CSRF token in form or header\n';
+            } else {
+                output += '   Required: NO\n';
+            }
+            output += '\n';
+
+            output += '3. VIEW-LEVEL PERMISSIONS\n';
+            if (endpoint === 'post-approve' || endpoint.includes('process')) {
+                output += '   Required: IsSchemeAdmin\n';
+                if (role !== 'scheme_admin') {
+                    output += '   Status: FAIL (user is not scheme admin)\n';
+                    output += '   HTTP Status: 403\n';
+                    output += '   Error Code: permission_denied\n\n';
+                    output += 'REQUEST DENIED\n';
+                    document.getElementById('sim-output').textContent = output;
+                    document.getElementById('sim-output').classList.add('show');
+                    return;
+                }
+                output += '   Status: PASS\n';
+            } else {
+                output += '   Required: IsAuthenticated\n';
+                output += '   Status: PASS\n';
+            }
+            output += '\n';
+
+            output += '4. TENANT SCOPING\n';
+            if (endpoint === 'get-jse') {
+                output += '   Applied: NO (reference data)\n';
+                output += '   Queryset: All JSE companies (not scoped)\n';
+            } else {
+                if (company === 'missing') {
+                    output += '   User Company: None\n';
+                    output += '   Queryset: UNFILTERED (admin access or security risk)\n';
+                } else {
+                    output += '   User Company: Company A\n';
+                    output += '   Queryset: Filtered by company=Company A\n';
+                }
+            }
+            output += '\n';
+
+            output += '5. OBJECT-LEVEL PERMISSIONS\n';
+            if (endpoint === 'get-jse') {
+                output += '   Applied: NO (reference data)\n';
+            } else {
+                output += '   Applied: YES (TenantScopedPermission)\n';
+                output += '   Checks: obj.company == user.company\n';
+            }
+            output += '\n';
+
+            output += '6. TRANSACTION ATOMIC\n';
+            if (endpoint.includes('approve') || endpoint.includes('process')) {
+                output += '   Applied: YES\n';
+                output += '   Reason: State-changing operation\n';
+            } else {
+                output += '   Applied: NO\n';
+            }
+            output += '\n';
+
+            output += '7. AUDIT LOGGING\n';
+            if (method === 'POST') {
+                output += '   Logged: YES\n';
+                output += '   Action: ' + (endpoint.includes('approve') ? 'APPROVE' : endpoint.includes('process') ? 'PROCESS' : 'CREATE') + '\n';
+            } else {
+                output += '   Logged: NO (read operation)\n';
+            }
+            output += '\n';
+
+            output += '8. LIKELY OUTCOME\n';
+            if (company === 'present' || endpoint === 'get-jse') {
+                output += '   HTTP Status: 200 (success)\n';
+                output += '   Response: JSON data or success message\n';
+            } else {
+                output += '   HTTP Status: 200 (but returns all data - security risk)\n';
+                output += '   Warning: User with no company seeing unfiltered data\n';
+            }
+
+            document.getElementById('sim-output').textContent = output;
+            document.getElementById('sim-output').classList.add('show');
+        }
+    </script>
+</body>
+</html>

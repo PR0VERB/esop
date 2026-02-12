@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ company.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ company.name }}</h1>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+    <fieldset style="border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Company Details</strong></legend>
+        <p><strong>Registration #:</strong> {{ company.registration_number }}</p>
+        <p><strong>Tax #:</strong> {{ company.tax_number|default:"-" }}</p>
+        <p><strong>Sector:</strong> {{ company.sector|default:"-" }}</p>
+        <p><strong>Active:</strong> {% if company.is_active %}Yes{% else %}No{% endif %}</p>
+    </fieldset>
+
+    <fieldset style="border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>JSE Listing</strong></legend>
+        <p><strong>Ticker:</strong> {{ company.jse_ticker|default:"Not listed" }}</p>
+        <p><strong>ISIN:</strong> {{ company.jse_isin|default:"-" }}</p>
+    </fieldset>
+
+    <fieldset style="border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>ESOP Scheme</strong></legend>
+        <p><strong>Scheme:</strong> {{ company.scheme_name|default:"-" }}</p>
+        <p><strong>Trust:</strong> {{ company.trust_name|default:"-" }}</p>
+        <p><strong>Trust Bank Account:</strong> {{ company.trust_bank_account|default:"-" }}</p>
+    </fieldset>
+
+    <fieldset style="border: 1px solid #ddd; padding: 1rem;">
+        <legend><strong>Metadata</strong></legend>
+        <p><strong>Created:</strong> {{ company.created_at|date:"d M Y H:i" }}</p>
+        <p><strong>Updated:</strong> {{ company.updated_at|date:"d M Y H:i" }}</p>
+    </fieldset>
+</div>
+
+<div style="display: flex; gap: 0.5rem;">
+    <a href="{% url 'tenants:list' %}" class="btn">Back to Companies</a>
+</div>
+{% endblock %}

@@ -36,6 +36,23 @@ class Company(BaseModel):
         help_text="Trust bank account number for dividend distributions.",
     )
 
+    # JSE listing details (optional — only for JSE-listed companies)
+    jse_ticker = models.CharField(
+        max_length=10,
+        blank=True,
+        help_text="JSE ticker symbol if the company is listed.",
+    )
+    jse_isin = models.CharField(
+        max_length=12,
+        blank=True,
+        help_text="ISIN code for the company's listed shares.",
+    )
+    sector = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Industry sector (e.g. 'Mining', 'Technology').",
+    )
+
     class Meta(BaseModel.Meta):
         verbose_name_plural = "companies"
         ordering = ["name"]

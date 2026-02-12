@@ -21,6 +21,7 @@ router.register(r"dividend-allocations", views.DividendAllocationViewSet, basena
 router.register(r"month-end-runs", views.MonthEndRunViewSet, basename="month-end-run")
 router.register(r"vesting-events", views.VestingEventViewSet, basename="vesting-event")
 router.register(r"tax-directives", views.TaxDirectiveViewSet, basename="tax-directive")
+router.register(r"jse-companies", views.JSECompanySearchViewSet, basename="jse-company")
 
 urlpatterns = [
     # Token authentication endpoint

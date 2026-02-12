@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Companies{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>Companies</h1>
+    <a href="{% url 'tenants:create' %}" class="btn btn-primary">+ Create Company</a>
+</div>
+
+<form method="get" action="{% url 'tenants:list' %}"
+      style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+    <input type="text" name="q" value="{{ request.GET.q }}"
+           class="form-input"
+           placeholder="Search by name, registration #, ticker..."
+           style="flex: 1;">
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background: #16213e; color: #fff;">
+            <th style="padding: 0.5rem; text-align: left;">Name</th>
+            <th style="padding: 0.5rem; text-align: left;">Registration #</th>
+            <th style="padding: 0.5rem; text-align: left;">JSE Ticker</th>
+            <th style="padding: 0.5rem; text-align: left;">Sector</th>
+            <th style="padding: 0.5rem; text-align: center;">Active</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for company in companies %}
+        <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 0.5rem;">
+                <a href="{% url 'tenants:detail' pk=company.pk %}">{{ company.name }}</a>
+            </td>
+            <td style="padding: 0.5rem;">{{ company.registration_number }}</td>
+            <td style="padding: 0.5rem;">{{ company.jse_ticker|default:"-" }}</td>
+            <td style="padding: 0.5rem;">{{ company.sector|default:"-" }}</td>
+            <td style="padding: 0.5rem; text-align: center;">
+                {% if company.is_active %}Yes{% else %}No{% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="padding: 1rem; text-align: center; color: #666;">
+                No companies found.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem;">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn">Previous</a>
+    {% endif %}
+    <span style="padding: 0.5rem;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn">Next</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

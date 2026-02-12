@@ -136,3 +136,81 @@ class IntegrationLog(TenantScopedModel):
             and self.retry_count < self.max_retries
         )
 
+
+class JSECompany(models.Model):
+    """
+    Static reference data: JSE-listed companies.
+    Seeded via management command; enriched with live data from Yahoo Finance.
+    NOT tenant-scoped -- this is shared reference data.
+    """
+
+    ticker = models.CharField(
+        max_length=10,
+        unique=True,
+        db_index=True,
+        help_text="JSE ticker symbol (e.g. 'SOL', 'NPN', 'ANG').",
+    )
+    company_name = models.CharField(
+        max_length=255,
+        db_index=True,
+        help_text="Full registered company name.",
+    )
+    isin = models.CharField(
+        max_length=12,
+        blank=True,
+        help_text="International Securities Identification Number.",
+    )
+    sector = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="JSE sector classification (e.g. 'Mining', 'Financial Services').",
+    )
+    market_cap_category = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Large Cap, Mid Cap, Small Cap, etc.",
+    )
+    registration_number = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="CIPC registration number if known.",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Whether the listing is currently active on JSE.",
+    )
+    last_enriched_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When live data was last fetched from Yahoo Finance.",
+    )
+    share_price = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Last fetched share price in ZAR.",
+    )
+    market_cap = models.BigIntegerField(
+        null=True,
+        blank=True,
+        help_text="Market capitalisation in ZAR.",
+    )
+
+    class Meta:
+        ordering = ["company_name"]
+        verbose_name = "JSE Listed Company"
+        verbose_name_plural = "JSE Listed Companies"
+        indexes = [
+            models.Index(fields=["ticker", "is_active"]),
+            models.Index(fields=["company_name", "is_active"]),
+        ]
+
+    def __str__(self):
+        return f"{self.ticker} - {self.company_name}"
+
+    @property
+    def yahoo_ticker(self):
+        """Yahoo Finance ticker for JSE stocks uses .JO suffix."""
+        return f"{self.ticker}.JO"
+

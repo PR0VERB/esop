@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./esopEnv/Scripts/pip.exe install:*)",
+      "Bash(./esopEnv/Scripts/python.exe manage.py seed_jse_companies:*)",
+      "Bash(./esopEnv/Scripts/python.exe manage.py check:*)",
+      "Bash(./esopEnv/Scripts/python.exe -c \"import rest_framework; print\\(rest_framework.VERSION\\)\")"
+    ]
+  }
+}

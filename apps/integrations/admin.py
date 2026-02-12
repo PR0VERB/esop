@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 
-from apps.integrations.models import IntegrationLog
+from apps.integrations.models import IntegrationLog, JSECompany
 
 
 @admin.register(IntegrationLog)
@@ -67,4 +67,12 @@ class IntegrationLogAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         """Prevent deletion of audit trail."""
         return False
+
+
+@admin.register(JSECompany)
+class JSECompanyAdmin(admin.ModelAdmin):
+    list_display = ("ticker", "company_name", "sector", "market_cap_category", "share_price", "is_active")
+    list_filter = ("sector", "market_cap_category", "is_active")
+    search_fields = ("ticker", "company_name", "isin")
+    readonly_fields = ("last_enriched_at", "share_price", "market_cap")
 
