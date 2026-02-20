@@ -65,6 +65,7 @@ class BeneficiaryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         """Pre-populate decrypted values when editing."""
+        self.company = kwargs.pop("company", None)
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields["id_number"].initial = self.instance.id_number
@@ -73,6 +74,22 @@ class BeneficiaryForm(forms.ModelForm):
     # -------------------------------------------------------------------
     # Validation
     # -------------------------------------------------------------------
+    def clean_employee_number(self):
+        """Enforce unique (company, employee_number) at form level."""
+        emp_no = self.cleaned_data.get("employee_number", "").strip()
+        if emp_no and self.company:
+            qs = Beneficiary.objects.filter(
+                company=self.company, employee_number=emp_no
+            )
+            if self.instance and self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError(
+                    f"A beneficiary with employee number '{emp_no}' already exists "
+                    f"for this company."
+                )
+        return emp_no
+
     def clean_id_number(self):
         """Validate SA ID number format (13 digits, Luhn check)."""
         value = self.cleaned_data.get("id_number", "").strip()

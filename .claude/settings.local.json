@@ -4,7 +4,9 @@
       "Bash(./esopEnv/Scripts/pip.exe install:*)",
       "Bash(./esopEnv/Scripts/python.exe manage.py seed_jse_companies:*)",
       "Bash(./esopEnv/Scripts/python.exe manage.py check:*)",
-      "Bash(./esopEnv/Scripts/python.exe -c \"import rest_framework; print\\(rest_framework.VERSION\\)\")"
+      "Bash(./esopEnv/Scripts/python.exe -c \"import rest_framework; print\\(rest_framework.VERSION\\)\")",
+      "Bash(esopEnv/Scripts/python manage.py shell:*)",
+      "Bash(ESOP_ROOT=\"c:/Users/BILLIONAIRE/Documents/work/PR0VERB/CODE/esop\" esopEnv/Scripts/python:*)"
     ]
   }
 }

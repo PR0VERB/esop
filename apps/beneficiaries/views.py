@@ -95,6 +95,11 @@ class BeneficiaryCreateView(
     form_class = BeneficiaryForm
     template_name = "beneficiaries/form.html"
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["company"] = self.get_company()
+        return kwargs
+
     def form_valid(self, form):
         # Set company server-side (never trust client input)
         form.instance.company = self.get_company()
@@ -131,6 +136,11 @@ class BeneficiaryUpdateView(
     form_class = BeneficiaryForm
     template_name = "beneficiaries/form.html"
     pk_url_kwarg = "pk"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["company"] = self.get_company()
+        return kwargs
 
     def form_valid(self, form):
         # Capture old values for audit trail (before save)

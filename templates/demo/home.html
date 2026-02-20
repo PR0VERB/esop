@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}Demo Navigator — ESOP Admin{% endblock %}
+
+{% block extra_head %}
+<style>
+  .demo-header {
+    margin: 2rem 0 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #16213e;
+  }
+  .demo-header h1 { font-size: 1.6rem; color: #16213e; }
+  .demo-header p  { color: #555; margin-top: 0.25rem; font-size: 0.95rem; }
+
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .demo-btn {
+    display: block;
+    padding: 0.85rem 1.1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.15s, transform 0.1s;
+    line-height: 1.3;
+  }
+  .demo-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+  .demo-btn:active { transform: translateY(0); }
+
+  .demo-btn small {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin-top: 0.2rem;
+    opacity: 0.75;
+  }
+
+  /* colour palette per section */
+  .btn-company    { background: #16213e; color: #fff; }
+  .btn-benficiary { background: #0f3460; color: #fff; }
+  .btn-documents  { background: #1a4d7c; color: #fff; }
+  .btn-dividend   { background: #155e4a; color: #fff; }
+  .btn-monthend   { background: #7b3f00; color: #fff; }
+  .btn-audit      { background: #4a1b6d; color: #fff; }
+
+  .creds {
+    background: #eef2f7;
+    border: 1px solid #d0d8e8;
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    font-size: 0.875rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .creds dt { font-weight: 600; color: #333; }
+  .creds dd { color: #555; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="demo-header">
+  <h1>Demo Navigator</h1>
+  <p>Ubuntu Industrial Holdings (Pty) Ltd &mdash; ESOP Platform Demo &mdash; February 2026</p>
+</div>
+
+<!-- Credentials reminder -->
+<p class="section-title">Login credentials</p>
+<dl class="creds">
+  <dt>ubuntu_admin</dt>       <dd>ESOP_Admin@2026 &mdash; creator / primary admin</dd>
+  <dt>ubuntu_approver</dt>    <dd>ESOP_Appr0ver@26 &mdash; approver (four-eyes)</dd>
+</dl>
+
+<!-- Companies -->
+<p class="section-title">Companies</p>
+<div class="btn-grid">
+  <a class="demo-btn btn-company" href="/companies/">
+    Company list
+    <small>/companies/</small>
+  </a>
+  <a class="demo-btn btn-company" href="/companies/21a1dcc8-50e8-49c4-ad61-64607ada7665/">
+    Ubuntu Holdings &mdash; detail
+    <small>/companies/&lt;uuid&gt;/</small>
+  </a>
+</div>
+
+<!-- Beneficiaries -->
+<p class="section-title">Beneficiaries</p>
+<div class="btn-grid">
+  <a class="demo-btn btn-benficiary" href="/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/">
+    Beneficiary register
+    <small>6 beneficiaries &mdash; 4 eligible</small>
+  </a>
+</div>
+
+<!-- Documents -->
+<p class="section-title">Documents</p>
+<div class="btn-grid">
+  <a class="demo-btn btn-documents" href="/documents/21a1dcc8-50e8-49c4-ad61-64607ada7665/">
+    Document vault
+    <small>/documents/&lt;uuid&gt;/</small>
+  </a>
+</div>
+
+<!-- Dividends -->
+<p class="section-title">Dividends</p>
+<div class="btn-grid">
+  <a class="demo-btn btn-dividend" href="/dividends/21a1dcc8-50e8-49c4-ad61-64607ada7665/">
+    Dividend runs list
+    <small>/dividends/&lt;uuid&gt;/</small>
+  </a>
+  <a class="demo-btn btn-dividend" href="/dividends/21a1dcc8-50e8-49c4-ad61-64607ada7665/6534bba3-5a7f-4345-aa89-64451f221549/">
+    FY2026 Interim Dividend
+    <small>DRAFT &mdash; R27,500 gross / R22,000 net</small>
+  </a>
+</div>
+
+<!-- Month-End -->
+<p class="section-title">Month-End</p>
+<div class="btn-grid">
+  <a class="demo-btn btn-monthend" href="/month-end/21a1dcc8-50e8-49c4-ad61-64607ada7665/">
+    Month-end runs list
+    <small>/month-end/&lt;uuid&gt;/</small>
+  </a>
+  <a class="demo-btn btn-monthend" href="/month-end/21a1dcc8-50e8-49c4-ad61-64607ada7665/7d516311-0354-48ce-86b9-0123fb0c2689/">
+    February 2026 Month-End
+    <small>DRAFT &mdash; R330,000 gross / R214,500 net</small>
+  </a>
+</div>
+
+<!-- Audit Log -->
+<p class="section-title">Audit log</p>
+<div class="btn-grid">
+  <a class="demo-btn btn-audit" href="/admin/audit/auditlog/">
+    Audit log (immutable)
+    <small>Django Admin &mdash; read-only</small>
+  </a>
+</div>
+{% endblock %}

@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ESOP Platform — 10-Min CEO Demo Checklist</title>
+  <style>
+    :root { --bg:#0b1220; --card:#111a2e; --text:#e9eefc; --muted:#a8b3d6; --line:#223055; --ok:#22c55e; --warn:#f59e0b; }
+    body { margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--text); }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 18px; }
+    h1 { font-size: 18px; margin: 0 0 10px; }
+    .meta { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+    .row { display:flex; gap:12px; flex-wrap: wrap; }
+    .card { background: var(--card); border:1px solid var(--line); border-radius: 10px; padding: 14px; flex: 1 1 440px; }
+    .card h2 { font-size: 14px; margin: 0 0 10px; color:#dbe6ff; }
+    .item { display:flex; gap:10px; padding:10px; border-radius: 10px; border:1px solid transparent; }
+    .item:hover { border-color: var(--line); }
+    .item input { margin-top: 3px; transform: scale(1.1); }
+    .txt { flex:1; }
+    .lbl { display:flex; align-items: baseline; justify-content: space-between; gap:10px; }
+    .lbl strong { font-size: 13px; }
+    .time { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .tip { margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.35; }
+    code { background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 6px; }
+    .pill { display:inline-block; font-size: 11px; padding:2px 8px; border-radius: 999px; border:1px solid var(--line); color: var(--muted); margin-left: 6px;}
+    .controls { display:flex; gap:10px; flex-wrap: wrap; margin: 10px 0 14px; }
+    button { background:#1a2646; color:var(--text); border:1px solid var(--line); border-radius:10px; padding:10px 12px; cursor:pointer; }
+    button:hover { border-color:#3a4a7a; }
+    .small { font-size: 12px; color: var(--muted); }
+    .hr { height:1px; background: var(--line); margin: 12px 0; border-radius: 1px; }
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    @media print {
+      :root { --bg:#fff; --card:#fff; --text:#000; --muted:#333; --line:#bbb; }
+      body { background:#fff; }
+      button, .small { display:none; }
+      .card { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>ESOP Platform — 10‑Minute CEO Demo Checklist</h1>
+    <div class="meta">
+      Goal: prove <span class="pill">workflows</span><span class="pill">four‑eyes approvals</span><span class="pill">audit evidence</span> in ≤10 minutes.
+      <br/>Tip: Use two browser windows/profiles: <strong>Operator</strong> + <strong>Reviewer</strong>.
+    </div>
+
+    <div class="controls">
+      <button type="button" onclick="toggleAll(true)">Check all</button>
+      <button type="button" onclick="toggleAll(false)">Uncheck all</button>
+      <button type="button" onclick="saveState()">Save</button>
+      <button type="button" onclick="loadState()">Load</button>
+      <button type="button" onclick="clearState()">Clear saved</button>
+      <div class="small">Saves to your browser (localStorage). Print-friendly.</div>
+    </div>
+
+    <div class="row">
+      <section class="card">
+        <h2>Pre‑Demo Setup (do before recording)</h2>
+
+        <label class="item"><input type="checkbox" data-id="pre-env" />
+          <div class="txt">
+            <div class="lbl"><strong>Environment running (dev)</strong><span class="time">2–3 min</span></div>
+            <div class="tip">
+              Run: <code>$env:DJANGO_SETTINGS_MODULE="config.settings.dev"</code>, then <code>python manage.py migrate</code>, <code>python manage.py runserver</code>.
+              Keep a tab open at <code>/health/</code> as a quick “it’s up” check.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="pre-accounts" />
+          <div class="txt">
+            <div class="lbl"><strong>Two distinct users exist (four‑eyes)</strong><span class="time">1 min</span></div>
+            <div class="tip">
+              Ensure both are <em>Scheme Admin</em>: <code>operator</code> (creates) + <code>reviewer</code> (approves). Keep both logged in.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="pre-data" />
+          <div class="txt">
+            <div class="lbl"><strong>Demo dataset ready</strong><span class="time">3–5 min</span></div>
+            <div class="tip">
+              1 company, 6–20 beneficiaries (≥3 active with <code>vested_shares &gt; 0</code>, 1 active with <code>vested_shares = 0</code>), 1 dividend run Draft, 1 month-end run Draft, 1 PDF ready.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="pre-tabs" />
+          <div class="txt">
+            <div class="lbl"><strong>Tabs pre-opened</strong><span class="time">1 min</span></div>
+            <div class="tip">
+              Open: <code>/companies/</code>, <code>/beneficiaries/&lt;company_uuid&gt;/</code>, <code>/documents/&lt;company_uuid&gt;/</code>,
+              <code>/dividends/&lt;company_uuid&gt;/</code>, <code>/month-end/&lt;company_uuid&gt;/</code>, and <code>/admin/audit/auditlog/</code>.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="pre-recording" />
+          <div class="txt">
+            <div class="lbl"><strong>Recording hygiene</strong><span class="time">30s</span></div>
+            <div class="tip">
+              Hide password managers, close Slack/email, and use fake data. Keep mouse movements minimal; zoom to 110–125% if text is small.
+            </div>
+          </div>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>10‑Minute Demo (time‑boxed run-of-show)</h2>
+
+        <label class="item"><input type="checkbox" data-id="d-0-open" />
+          <div class="txt">
+            <div class="lbl"><strong>0:00–0:30 — Opening: the “why”</strong><span class="time">30s</span></div>
+            <div class="tip">
+              Say: “This turns ESOP admin into controlled workflows with approvals + evidence.” Show <code>/companies/</code>.
+              Avoid deep UX commentary; keep it outcomes-first.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-1-company" />
+          <div class="txt">
+            <div class="lbl"><strong>0:30–1:30 — Company tenant (client onboarding)</strong><span class="time">60s</span></div>
+            <div class="tip">
+              Show company list + search. Optional: briefly open “Create Company” to show JSE autocomplete then cancel.
+              Say: “Everything is scoped per client company.”
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-2-beneficiaries" />
+          <div class="txt">
+            <div class="lbl"><strong>1:30–3:00 — Beneficiary register (validated)</strong><span class="time">90s</span></div>
+            <div class="tip">
+              Show filters/search, open a beneficiary detail, point to shares and status. Say: “Validation prevents payout mistakes; sensitive fields encrypted at rest.”
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-2b-validation" />
+          <div class="txt">
+            <div class="lbl"><strong>Optional — Show a validation catch</strong><span class="time">15–30s</span></div>
+            <div class="tip">
+              Start adding/editing a beneficiary: set Total ≠ Vested + Unvested to trigger the error, then fix it.
+              Only do this if you’re ahead on time.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-3-docs" />
+          <div class="txt">
+            <div class="lbl"><strong>3:00–4:15 — Documents (quarantine → active)</strong><span class="time">75s</span></div>
+            <div class="tip">
+              Upload a PDF → show status “Quarantine” + SHA-256 hash → change status to “Active” → download.
+              Say: “Controlled access + audit evidence.”
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-4-dividend" />
+          <div class="txt">
+            <div class="lbl"><strong>4:15–7:15 — Dividend run (four‑eyes + allocations)</strong><span class="time">180s</span></div>
+            <div class="tip">
+              In Operator window: try approve → show four-eyes error. In Reviewer window: approve → process.
+              Point to totals (gross/tax/net) + allocations table.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-5-monthend" />
+          <div class="txt">
+            <div class="lbl"><strong>7:15–8:45 — Month-end run (events + totals)</strong><span class="time">90s</span></div>
+            <div class="tip">
+              Approve (reviewer), then process with share price + tax rate (e.g. <code>150.0000</code>, <code>0.3500</code>).
+              Show vesting events + totals.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-6-audit" />
+          <div class="txt">
+            <div class="lbl"><strong>8:45–9:30 — Audit proof (immutable evidence)</strong><span class="time">45s</span></div>
+            <div class="tip">
+              Open <code>/admin/audit/auditlog/</code>. Filter/search for dividend run state change + document upload/download.
+              Say: “Evidence for compliance + operational sign-off.”
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="d-7-close" />
+          <div class="txt">
+            <div class="lbl"><strong>9:30–10:00 — Close + proposal bridge</strong><span class="time">30s</span></div>
+            <div class="tip">
+              Say: “Next we lock export formats, approval rules, and exception handling; Phase 1 = workflows + evidence; Phase 2 = automate integrations.”
+              End on a “Completed” run screen.
+            </div>
+          </div>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>On‑Camera Tips (keep it CEO‑level)</h2>
+
+        <label class="item"><input type="checkbox" data-id="t-keep-tight" />
+          <div class="txt">
+            <div class="lbl"><strong>Keep it outcome‑first</strong><span class="time">always</span></div>
+            <div class="tip">
+              Use 1 sentence per screen: “what it does” + “why it matters” (risk, speed, evidence).
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="t-no-claims" />
+          <div class="txt">
+            <div class="lbl"><strong>Don’t over-claim</strong><span class="time">always</span></div>
+            <div class="tip">
+              Say explicitly if an item is template/file-based today (exports, live integrations). CEOs trust clear boundaries.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="t-two-windows" />
+          <div class="txt">
+            <div class="lbl"><strong>Use two windows for four‑eyes</strong><span class="time">always</span></div>
+            <div class="tip">
+              The “creator cannot approve” moment is a high-impact proof point—don’t skip it.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="t-speed" />
+          <div class="txt">
+            <div class="lbl"><strong>Stay under 10 minutes</strong><span class="time">always</span></div>
+            <div class="tip">
+              If you’re behind: skip the optional validation step and keep the audit section to 1 quick filter + 1 example row.
+            </div>
+          </div>
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>Post‑Demo Follow‑Up (what you send in the proposal email)</h2>
+
+        <label class="item"><input type="checkbox" data-id="p-questions" />
+          <div class="txt">
+            <div class="lbl"><strong>Send 5 required inputs</strong><span class="time">same day</span></div>
+            <div class="tip">
+              Ask for: export formats/fields, approval rules, exception scenarios, audit/retention requirements, integration priorities.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="p-acceptance" />
+          <div class="txt">
+            <div class="lbl"><strong>Propose “acceptance scenario” sign-off</strong><span class="time">same day</span></div>
+            <div class="tip">
+              One agreed scenario that runs end-to-end with evidence (audit entries + outputs). This is how Phase 1 gets accepted.
+            </div>
+          </div>
+        </label>
+
+        <label class="item"><input type="checkbox" data-id="p-next-meeting" />
+          <div class="txt">
+            <div class="lbl"><strong>Schedule a 45‑minute working session</strong><span class="time">next</span></div>
+            <div class="tip">
+              Agenda: exports/templates, roles/segregation, operational cadence, and what “done” means for Phase 1.
+            </div>
+          </div>
+        </label>
+      </section>
+    </div>
+
+    <div class="hr"></div>
+    <div class="small">
+      Quick URLs: <code>/companies/</code> • <code>/beneficiaries/&lt;company_uuid&gt;/</code> • <code>/documents/&lt;company_uuid&gt;/</code> •
+      <code>/dividends/&lt;company_uuid&gt;/</code> • <code>/month-end/&lt;company_uuid&gt;/</code> • <code>/admin/audit/auditlog/</code>
+    </div>
+  </div>
+
+  <script>
+    function getBoxes() { return Array.from(document.querySelectorAll('input[type="checkbox"][data-id]')); }
+
+    function toggleAll(on) {
+      getBoxes().forEach(b => b.checked = !!on);
+    }
+
+    function saveState() {
+      const state = {};
+      getBoxes().forEach(b => state[b.dataset.id] = b.checked);
+      localStorage.setItem("esop_demo_checklist_v1", JSON.stringify(state));
+      alert("Saved.");
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem("esop_demo_checklist_v1");
+      if (!raw) return alert("No saved state found.");
+      const state = JSON.parse(raw);
+      getBoxes().forEach(b => b.checked = !!state[b.dataset.id]);
+      alert("Loaded.");
+    }
+
+    function clearState() {
+      localStorage.removeItem("esop_demo_checklist_v1");
+      alert("Cleared.");
+    }
+
+    // Auto-load if present
+    (function(){
+      const raw = localStorage.getItem("esop_demo_checklist_v1");
+      if (!raw) return;
+      try { const state = JSON.parse(raw); getBoxes().forEach(b => b.checked = !!state[b.dataset.id]); } catch(e) {}
+    })();
+  </script>
+</body>
+</html>
