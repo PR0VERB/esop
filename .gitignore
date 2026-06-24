@@ -60,3 +60,11 @@ celerybeat.pid
 *.key
 secrets.json
 
+# Root-level docs/demo assets - kept locally only, not pushed to remote
+/*.md
+/*.MD
+/*.html
+/*.HTML
+/*.docx
+!/README.md
+
