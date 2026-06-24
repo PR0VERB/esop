@@ -1,0 +1,673 @@
+<!DOCTYPE html><html><head>
+      <title>DEMO_GUIDE</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\BILLIONAIRE\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.20\crossnote\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="esop-platform--ceo-demo-guide">ESOP Platform — CEO Demo Guide </h1>
+<p><strong>Ubuntu Industrial Holdings (Pty) Ltd | February 2026</strong></p>
+<blockquote>
+<p>All names, numbers, and registration details are fictional demo data.<br>
+This is not financial or tax advice.</p>
+</blockquote>
+<hr>
+<h2 id="1-before-you-start">1. Before You Start </h2>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># From the project root, activate the venv and start the server</span>
+esopEnv/Scripts/activate
+python manage.py runserver
+</code></pre><p>Then open <strong><a href="http://localhost:8000">http://localhost:8000</a></strong> in your browser.</p>
+<hr>
+<h2 id="2-login-credentials">2. Login Credentials </h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>User 1 — Primary Admin</th>
+<th>User 2 — Approver</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Username</strong></td>
+<td><code>ubuntu_admin</code></td>
+<td><code>ubuntu_approver</code></td>
+</tr>
+<tr>
+<td><strong>Password</strong></td>
+<td><code>ESOP_Admin@2026</code></td>
+<td><code>ESOP_Appr0ver@26</code></td>
+</tr>
+<tr>
+<td><strong>Name</strong></td>
+<td>Nomsa Dube</td>
+<td>Kagiso Sithole</td>
+</tr>
+<tr>
+<td><strong>Role</strong></td>
+<td>Scheme Admin</td>
+<td>Scheme Admin</td>
+</tr>
+<tr>
+<td><strong>Use for</strong></td>
+<td>Creating, navigating, processing</td>
+<td>Approving runs (four-eyes)</td>
+</tr>
+</tbody>
+</table>
+<p>Login URL: <strong><a href="http://localhost:8000/accounts/login/">http://localhost:8000/accounts/login/</a></strong></p>
+<blockquote>
+<p><strong>MFA is disabled</strong> in the dev environment — no TOTP step required.</p>
+</blockquote>
+<hr>
+<h2 id="3-the-demo-company-tenant">3. The Demo Company (Tenant) </h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Company name</td>
+<td>Ubuntu Industrial Holdings (Pty) Ltd</td>
+</tr>
+<tr>
+<td>CIPC registration</td>
+<td>2010/012345/07</td>
+</tr>
+<tr>
+<td>SARS income tax #</td>
+<td>9876543210</td>
+</tr>
+<tr>
+<td>Scheme name</td>
+<td>Ubuntu ESOP Trust</td>
+</tr>
+<tr>
+<td>Trust name</td>
+<td>Ubuntu Employee Share Trust</td>
+</tr>
+<tr>
+<td>Trust bank account</td>
+<td>000123456789 (demo)</td>
+</tr>
+<tr>
+<td><strong>Company UUID</strong></td>
+<td><code>21a1dcc8-50e8-49c4-ad61-64607ada7665</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4-beneficiary-register">4. Beneficiary Register </h2>
+<table>
+<thead>
+<tr>
+<th>Emp #</th>
+<th>Name</th>
+<th>Status</th>
+<th>Total</th>
+<th>Vested</th>
+<th>Unvested</th>
+<th>Bank</th>
+<th>Eligible?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EMP-1001</td>
+<td>Zinhle Dlamini</td>
+<td>Active</td>
+<td>1,200</td>
+<td>300</td>
+<td>900</td>
+<td>Standard Bank</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>EMP-1002</td>
+<td>Thabo Mokoena</td>
+<td>Active</td>
+<td>2,000</td>
+<td>800</td>
+<td>1,200</td>
+<td>FNB</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>EMP-1003</td>
+<td>Aisha Patel</td>
+<td>Active</td>
+<td>1,500</td>
+<td>500</td>
+<td>1,000</td>
+<td>Nedbank</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>EMP-1004</td>
+<td>Pieter van Wyk</td>
+<td>Active</td>
+<td>500</td>
+<td><strong>0</strong></td>
+<td>500</td>
+<td>Absa</td>
+<td><strong>No</strong> — vested = 0</td>
+</tr>
+<tr>
+<td>EMP-1005</td>
+<td>Lerato Ncube</td>
+<td><strong>Terminated</strong></td>
+<td>1,000</td>
+<td>200</td>
+<td>800</td>
+<td>Capitec</td>
+<td><strong>No</strong> — not active</td>
+</tr>
+<tr>
+<td>EMP-1006</td>
+<td>Sipho Khumalo</td>
+<td>Active</td>
+<td>1,800</td>
+<td>600</td>
+<td>1,200</td>
+<td>Standard Bank</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Eligible total vested shares: 2,200</strong> (EMP-1001 + EMP-1002 + EMP-1003 + EMP-1006)</p>
+<blockquote>
+<p>SA ID numbers are intentionally blank — safe for screen-share and video demos (POPIA).<br>
+Bank account numbers are fictional and stored <strong>encrypted at rest</strong> (Fernet/AES).</p>
+</blockquote>
+<hr>
+<h2 id="5-demo-urls">5. Demo URLs </h2>
+<p>Replace <code>&lt;COMPANY&gt;</code> with <code>21a1dcc8-50e8-49c4-ad61-64607ada7665</code> — or use the links below directly.</p>
+<h3 id="51-companies">5.1 Companies </h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Company list</td>
+<td><a href="http://localhost:8000/companies/">http://localhost:8000/companies/</a></td>
+</tr>
+<tr>
+<td>Ubuntu Holdings detail</td>
+<td><a href="http://localhost:8000/companies/21a1dcc8-50e8-49c4-ad61-64607ada7665/">http://localhost:8000/companies/21a1dcc8-50e8-49c4-ad61-64607ada7665/</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="52-beneficiaries">5.2 Beneficiaries </h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Beneficiary register</td>
+<td><a href="http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/">http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/</a></td>
+</tr>
+<tr>
+<td>Zinhle Dlamini</td>
+<td><a href="http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/4cd1fdf2-606b-4848-9e33-a101a22611ee/">http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/4cd1fdf2-606b-4848-9e33-a101a22611ee/</a></td>
+</tr>
+<tr>
+<td>Thabo Mokoena</td>
+<td><a href="http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/526dfe50-2471-430f-9192-d3b11b1698d2/">http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/526dfe50-2471-430f-9192-d3b11b1698d2/</a></td>
+</tr>
+<tr>
+<td>Aisha Patel</td>
+<td><a href="http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/c9fdb25d-c483-45e8-bcc6-7f69c48ce78f/">http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/c9fdb25d-c483-45e8-bcc6-7f69c48ce78f/</a></td>
+</tr>
+<tr>
+<td>Pieter van Wyk</td>
+<td><a href="http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/d603cc69-1023-4d4b-86a1-2ff4238b9fa3/">http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/d603cc69-1023-4d4b-86a1-2ff4238b9fa3/</a></td>
+</tr>
+<tr>
+<td>Lerato Ncube (Terminated)</td>
+<td><a href="http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/8ac1b6ae-1189-4f61-abf0-1768059354c5/">http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/8ac1b6ae-1189-4f61-abf0-1768059354c5/</a></td>
+</tr>
+<tr>
+<td>Sipho Khumalo</td>
+<td><a href="http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/153a2c09-fda2-44db-b714-712ac96ce79e/">http://localhost:8000/beneficiaries/21a1dcc8-50e8-49c4-ad61-64607ada7665/153a2c09-fda2-44db-b714-712ac96ce79e/</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-documents">5.3 Documents </h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Document vault</td>
+<td><a href="http://localhost:8000/documents/21a1dcc8-50e8-49c4-ad61-64607ada7665/">http://localhost:8000/documents/21a1dcc8-50e8-49c4-ad61-64607ada7665/</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-dividends">5.4 Dividends </h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dividend runs list</td>
+<td><a href="http://localhost:8000/dividends/21a1dcc8-50e8-49c4-ad61-64607ada7665/">http://localhost:8000/dividends/21a1dcc8-50e8-49c4-ad61-64607ada7665/</a></td>
+</tr>
+<tr>
+<td><strong>FY2026 Interim Dividend (DRAFT)</strong></td>
+<td><a href="http://localhost:8000/dividends/21a1dcc8-50e8-49c4-ad61-64607ada7665/6534bba3-5a7f-4345-aa89-64451f221549/">http://localhost:8000/dividends/21a1dcc8-50e8-49c4-ad61-64607ada7665/6534bba3-5a7f-4345-aa89-64451f221549/</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="55-month-end">5.5 Month-End </h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Month-end runs list</td>
+<td><a href="http://localhost:8000/month-end/21a1dcc8-50e8-49c4-ad61-64607ada7665/">http://localhost:8000/month-end/21a1dcc8-50e8-49c4-ad61-64607ada7665/</a></td>
+</tr>
+<tr>
+<td><strong>February 2026 Month-End (DRAFT)</strong></td>
+<td><a href="http://localhost:8000/month-end/21a1dcc8-50e8-49c4-ad61-64607ada7665/7d516311-0354-48ce-86b9-0123fb0c2689/">http://localhost:8000/month-end/21a1dcc8-50e8-49c4-ad61-64607ada7665/7d516311-0354-48ce-86b9-0123fb0c2689/</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="56-audit-log-django-admin">5.6 Audit Log (Django Admin) </h3>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Audit log (immutable)</td>
+<td><a href="http://localhost:8000/admin/audit/auditlog/">http://localhost:8000/admin/audit/auditlog/</a></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="6-dividend-run--expected-numbers">6. Dividend Run — Expected Numbers </h2>
+<p><strong>Run:</strong> FY2026 Interim Dividend (Demo) | <strong>Status:</strong> DRAFT</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dividend per share</td>
+<td>R12.50</td>
+</tr>
+<tr>
+<td>DWT rate</td>
+<td>20% (0.2000)</td>
+</tr>
+<tr>
+<td>Record date</td>
+<td>13 February 2026</td>
+</tr>
+<tr>
+<td>Payment date</td>
+<td>20 February 2026</td>
+</tr>
+<tr>
+<td>Declaration date</td>
+<td>10 February 2026</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eligible shares</td>
+<td>2,200</td>
+</tr>
+<tr>
+<td><strong>Total gross</strong></td>
+<td><strong>R27,500.00</strong></td>
+</tr>
+<tr>
+<td><strong>Total DWT (20%)</strong></td>
+<td><strong>R5,500.00</strong></td>
+</tr>
+<tr>
+<td><strong>Total net</strong></td>
+<td><strong>R22,000.00</strong></td>
+</tr>
+<tr>
+<td>Allocations</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Per-beneficiary breakdown:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Beneficiary</th>
+<th>Vested shares</th>
+<th>Gross</th>
+<th>DWT (20%)</th>
+<th>Net</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zinhle Dlamini</td>
+<td>300</td>
+<td>R3,750.00</td>
+<td>R750.00</td>
+<td>R3,000.00</td>
+</tr>
+<tr>
+<td>Thabo Mokoena</td>
+<td>800</td>
+<td>R10,000.00</td>
+<td>R2,000.00</td>
+<td>R8,000.00</td>
+</tr>
+<tr>
+<td>Aisha Patel</td>
+<td>500</td>
+<td>R6,250.00</td>
+<td>R1,250.00</td>
+<td>R5,000.00</td>
+</tr>
+<tr>
+<td>Sipho Khumalo</td>
+<td>600</td>
+<td>R7,500.00</td>
+<td>R1,500.00</td>
+<td>R6,000.00</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>2,200</strong></td>
+<td><strong>R27,500.00</strong></td>
+<td><strong>R5,500.00</strong></td>
+<td><strong>R22,000.00</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="7-month-end-run--expected-numbers">7. Month-End Run — Expected Numbers </h2>
+<p><strong>Run:</strong> February 2026 Month-End | <strong>Status:</strong> DRAFT</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Period</td>
+<td>February 2026</td>
+</tr>
+<tr>
+<td>Share price</td>
+<td>R150.00</td>
+</tr>
+<tr>
+<td>Tax rate (Section 8C)</td>
+<td>35% (0.3500)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Output</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eligible shares</td>
+<td>2,200</td>
+</tr>
+<tr>
+<td><strong>Total gross proceeds</strong></td>
+<td><strong>R330,000.00</strong></td>
+</tr>
+<tr>
+<td><strong>Total tax (35%)</strong></td>
+<td><strong>R115,500.00</strong></td>
+</tr>
+<tr>
+<td><strong>Total net proceeds</strong></td>
+<td><strong>R214,500.00</strong></td>
+</tr>
+<tr>
+<td>Vesting events</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Per-beneficiary breakdown:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Beneficiary</th>
+<th>Shares</th>
+<th>Gross</th>
+<th>Tax (35%)</th>
+<th>Net</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zinhle Dlamini</td>
+<td>300</td>
+<td>R45,000.00</td>
+<td>R15,750.00</td>
+<td>R29,250.00</td>
+</tr>
+<tr>
+<td>Thabo Mokoena</td>
+<td>800</td>
+<td>R120,000.00</td>
+<td>R42,000.00</td>
+<td>R78,000.00</td>
+</tr>
+<tr>
+<td>Aisha Patel</td>
+<td>500</td>
+<td>R75,000.00</td>
+<td>R26,250.00</td>
+<td>R48,750.00</td>
+</tr>
+<tr>
+<td>Sipho Khumalo</td>
+<td>600</td>
+<td>R90,000.00</td>
+<td>R31,500.00</td>
+<td>R58,500.00</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>2,200</strong></td>
+<td><strong>R330,000.00</strong></td>
+<td><strong>R115,500.00</strong></td>
+<td><strong>R214,500.00</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="8-four-eyes-approval-workflow">8. Four-Eyes Approval Workflow </h2>
+<p>The system <strong>enforces</strong> that the approver must be a different user from the creator.<br>
+Attempting to approve your own run will return an error.</p>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>ubuntu_admin    = Creator  (created both DRAFT runs)
+ubuntu_approver = Approver (must be used to approve)
+</code></pre><h3 id="step-by-step">Step-by-step </h3>
+<p><strong>Step 1 — Log in as ubuntu_admin</strong></p>
+<ul>
+<li>Navigate to the dividend run or month-end run detail page</li>
+<li>Confirm the run is in <strong>DRAFT</strong> status with your numbers visible</li>
+</ul>
+<p><strong>Step 2 — Log out → log in as ubuntu_approver</strong></p>
+<ul>
+<li>Open the same run detail URL</li>
+<li>Click <strong>Approve</strong></li>
+<li>Run moves to <strong>APPROVED</strong></li>
+<li>System records: approved_by = Kagiso Sithole, approved_at = [timestamp]</li>
+</ul>
+<p><strong>Step 3 — Click Process</strong> (either user can do this)</p>
+<ul>
+<li>Allocations / vesting events are created from the live beneficiary register</li>
+<li>Run moves to <strong>COMPLETED</strong></li>
+<li>Totals are computed and locked</li>
+</ul>
+<p><strong>Step 4 — Open the audit log</strong></p>
+<ul>
+<li>URL: <a href="http://localhost:8000/admin/audit/auditlog/">http://localhost:8000/admin/audit/auditlog/</a></li>
+<li>Every state change is timestamped, user-attributed, and <strong>immutable</strong> (no edit/delete in the UI)</li>
+</ul>
+<blockquote>
+<p><strong>To reset a run back to DRAFT</strong> (if you want to demo the workflow again):<br>
+Click <strong>Reset to Draft</strong> on the run detail page. This deletes the allocations/events<br>
+so the workflow can be re-run cleanly.</p>
+</blockquote>
+<hr>
+<h2 id="9-sa-tax-terms--talk-track">9. SA Tax Terms — Talk Track </h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>What to say</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DWT</strong></td>
+<td>"Dividends Withholding Tax — SARS requires us to withhold 20% at source before paying beneficiaries. The platform calculates and records this automatically."</td>
+</tr>
+<tr>
+<td><strong>Section 8C</strong></td>
+<td>"When shares vest or are disposed of, SARS treats this as income. The 35% rate here represents the tax directive rate we'd apply on the gain."</td>
+</tr>
+<tr>
+<td><strong>SARS tax directive</strong></td>
+<td>"For larger disposals, we'd request a directive from SARS specifying the applicable rate. The platform has a workflow to log directive requests, track responses, and apply the approved rate."</td>
+</tr>
+<tr>
+<td><strong>PAYE / IRP5</strong></td>
+<td>"The net payment figures feed into payroll for IRP5 reporting — the platform produces the data extract your payroll team needs."</td>
+</tr>
+<tr>
+<td><strong>POPIA</strong></td>
+<td>"All SA ID numbers and bank account details are encrypted at rest using AES/Fernet. The audit log records every access event for POPIA compliance."</td>
+</tr>
+<tr>
+<td><strong>JSE / SENS</strong></td>
+<td>"For JSE-listed companies, the platform auto-fills ticker, ISIN, and sector from a live JSE reference dataset using the search widget on the company form."</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="10-key-architecture-points-for-technical-questions">10. Key Architecture Points (for technical questions) </h2>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-tenancy</td>
+<td>Every data row is scoped to a <code>company_id</code> — no data can cross tenant boundaries</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>SA ID numbers and bank account numbers are encrypted with Fernet (AES-128) — not readable in the database</td>
+</tr>
+<tr>
+<td>State machine</td>
+<td>DRAFT → APPROVED → PROCESSING → COMPLETED (or FAILED). Transitions are enforced in the service layer, not the UI</td>
+</tr>
+<tr>
+<td>Four-eyes</td>
+<td>Hardcoded in the service: <code>if user == run.created_by: raise InvalidStateTransition</code></td>
+</tr>
+<tr>
+<td>Idempotency</td>
+<td>Each run has a unique <code>idempotency_key</code> — duplicate processing is a no-op</td>
+</tr>
+<tr>
+<td>Audit trail</td>
+<td>Every create, update, and state change writes an <code>AuditLog</code> row. The admin marks it read-only and prevents delete</td>
+</tr>
+<tr>
+<td>Currency</td>
+<td>All amounts stored as <code>DecimalField</code> — no floats, no rounding errors</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>Generated: 20 February 2026 | Demo environment only — do not use in production</em></p>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  
+    </body></html>

@@ -6,7 +6,20 @@
       "Bash(./esopEnv/Scripts/python.exe manage.py check:*)",
       "Bash(./esopEnv/Scripts/python.exe -c \"import rest_framework; print\\(rest_framework.VERSION\\)\")",
       "Bash(esopEnv/Scripts/python manage.py shell:*)",
-      "Bash(ESOP_ROOT=\"c:/Users/BILLIONAIRE/Documents/work/PR0VERB/CODE/esop\" esopEnv/Scripts/python:*)"
+      "Bash(ESOP_ROOT=\"c:/Users/BILLIONAIRE/Documents/work/PR0VERB/CODE/esop\" esopEnv/Scripts/python:*)",
+      "Bash(ls -la \"c:\\\\Users\\\\bseot\\\\Documents\\\\CODE\\\\esop\\\\.claude\" 2>/dev/null; echo \"---\"; ls \"C:\\\\Users\\\\BILLIONAIRE\\\\.claude\" 2>/dev/null; echo \"---memory---\"; cat \"C:\\\\Users\\\\bseot\\\\.claude\\\\projects\\\\c--Users-bseot-Documents-CODE-esop\\\\memory\\\\MEMORY.md\" 2>/dev/null)",
+      "Read(//c/Users/BILLIONAIRE/**)",
+      "Bash(test -f \"C:\\\\Users\\\\bseot\\\\.claude\\\\projects\\\\c--Users-bseot-Documents-CODE-esop\\\\memory\\\\MEMORY.md\" && echo EXISTS || echo MISSING; ls \"C:\\\\Users\\\\bseot\\\\.claude\\\\projects\\\\c--Users-bseot-Documents-CODE-esop\\\\memory\\\\\" 2>/dev/null)",
+      "Read(//c/Users/bseot/.claude/projects/c--Users-bseot-Documents-CODE-esop/memory\" 2>/dev/**)",
+      "Bash(git ls-remote *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "PowerShell(gh repo view PR0VERB/esop --json description,pushedAt,defaultBranchRef 2>&1)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git fetch *)",
+      "Bash(git reset *)",
+      "Bash(git add *)"
     ]
   }
 }
